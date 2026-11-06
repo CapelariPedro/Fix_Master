@@ -1,0 +1,50 @@
+# F00 — Login local
+
+| Campo | Valor |
+|---|---|
+| Caso de uso | UC00 — Realizar Login Local |
+| Requisitos | RF01, RNF06 |
+| Histórias | US01 |
+| Depende de | F06 (fundação) |
+| Branch sugerida | `feature/f00-login-local` |
+
+## Objetivo
+
+Controlar o acesso ao sistema com credenciais armazenadas de forma segura no banco local.
+
+## Telas (estilo Starfield)
+
+- `LoginView`: painel central translúcido sobre fundo escuro, campos USUÁRIO e SENHA, botão ENTRAR (cor de destaque) e área de mensagem de erro.
+- Atalhos exibidos na barra inferior (ex.: [ENTER] ENTRAR).
+
+## Entidades envolvidas
+
+- `Usuario` (Id, Username, SenhaHash)
+
+## Serviços e regras de negócio
+
+- `IAuthService.AutenticarAsync(usuario, senha) : bool`
+- `PasswordHasher`: PBKDF2 com sal aleatório (`Rfc2898DeriveBytes.Pbkdf2`, já embutido no .NET) — armazenar sal + hash no campo SenhaHash.
+- `DbSeeder`: no primeiro uso (tabela Usuarios vazia), exibir tela de criação do operador, evitando senha padrão no repositório.
+
+### Regras
+
+- Mensagem de erro única para usuário inexistente e senha errada.
+- Comparação de hash em tempo constante (`CryptographicOperations.FixedTimeEquals`).
+- Após autenticar, `MainViewModel.CurrentScreen` troca de `LoginViewModel` para `ShellViewModel`.
+
+## Tarefas técnicas
+
+- [ ] Criar `Usuario` e configuração EF (índice único em Username)
+- [ ] Implementar `PasswordHasher` + testes
+- [ ] Implementar `AuthService`
+- [ ] Criar `LoginViewModel` e `LoginView`
+- [ ] Fluxo de primeiro acesso (criar operador)
+- [ ] Troca de tela Login → Shell
+
+## Definição de pronto
+
+- [ ] Todas as histórias da feature concluídas
+- [ ] Regras de negócio cobertas por testes unitários
+- [ ] Funciona offline
+- [ ] Atividade relevante registrada no feed (quando aplicável)

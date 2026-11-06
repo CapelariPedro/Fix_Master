@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FixMaster.ViewModels"
+             x:Class="FixMaster.Views.Login.PrimeiroAcessoView"
+             x:DataType="vm:PrimeiroAcessoViewModel">
+
+  <Grid>
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                Width="360" Spacing="28">
+
+      <Image Source="avares://FixMaster/Assets/logos/logo_vb_colorido.png"
+             Height="120" Stretch="Uniform" />
+
+      <Border Classes="panel">
+        <StackPanel Spacing="14">
+          <TextBlock Classes="label" Text="PRIMEIRO ACESSO" />
+          <TextBlock Classes="muted" TextWrapping="Wrap"
+                     Text="Crie o usuário do operador. A senha deve ter ao menos 8 caracteres." />
+
+          <StackPanel Spacing="4">
+            <TextBlock Classes="label" Text="USUÁRIO" />
+            <TextBox Text="{Binding Usuario}" />
+          </StackPanel>
+
+          <StackPanel Spacing="4">
+            <TextBlock Classes="label" Text="SENHA" />
+            <TextBox Text="{Binding Senha}" PasswordChar="●" />
+          </StackPanel>
+
+          <StackPanel Spacing="4">
+            <TextBlock Classes="label" Text="CONFIRMAR SENHA" />
+            <TextBox Text="{Binding ConfirmarSenha}" PasswordChar="●" />
+          </StackPanel>
+
+          <TextBlock Text="{Binding MensagemErro}"
+                     IsVisible="{Binding MensagemErro, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                     Foreground="{DynamicResource SfDangerBrush}"
+                     TextWrapping="Wrap" />
+
+          <Button Classes="accent" Content="CRIAR USUÁRIO"
+                  Command="{Binding CriarCommand}"
+                  IsDefault="True"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Center" />
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </Grid>
+</UserControl>
