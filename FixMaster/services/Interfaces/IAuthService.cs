@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FixMaster.Infrastructure;
 
@@ -10,5 +11,16 @@ public interface IAuthService
 
     Task<Resultado> CriarOperadorAsync(string usuario, string senha);
 
-    Task<bool> AutenticarAsync(string usuario, string senha);
+    Task<Resultado> CriarUsuarioAsync(
+        string usuarioAdministrador,
+        string senhaAdministrador,
+        string usuario,
+        string senha,
+        bool ehAdministrador);
+
+    Task<Resultado<IReadOnlyList<UsuarioResumo>>> ListarUsuariosAsync();
+
+    Task<Resultado> ExcluirUsuarioAsync(string usuarioAdministrador, int idUsuario);
+
+    Task<UsuarioAutenticado?> AutenticarAsync(string usuario, string senha);
 }

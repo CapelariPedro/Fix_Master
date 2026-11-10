@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FixMaster.Infrastructure;
 using FixMaster.Services.Interfaces;
 
 namespace FixMaster.ViewModels;
@@ -9,7 +10,7 @@ namespace FixMaster.ViewModels;
 public partial class LoginViewModel : ViewModelBase
 {
     private readonly IAuthService _auth;
-    private readonly Action _aoAutenticar;
+    private readonly Func<UsuarioAutenticado, Task> _aoAutenticar;
 
     [ObservableProperty]
     private string _usuario = "";
@@ -20,7 +21,7 @@ public partial class LoginViewModel : ViewModelBase
     [ObservableProperty]
     private string? _mensagemErro;
 
-    public LoginViewModel(IAuthService auth, Action aoAutenticar)
+    public LoginViewModel(IAuthService auth, Func<UsuarioAutenticado, Task> aoAutenticar)
     {
         _auth = auth;
         _aoAutenticar = aoAutenticar;
@@ -30,10 +31,11 @@ public partial class LoginViewModel : ViewModelBase
     private async Task EntrarAsync()
     {
         MensagemErro = null;
-        if (await _auth.AutenticarAsync(Usuario, Senha))
+        var usuarioAutenticado = await _auth.AutenticarAsync(Usuario, Senha);
+        if (usuarioAutenticado is not null)
         {
             Senha = "";
-            _aoAutenticar();
+            await _aoAutenticar(usuarioAutenticado);
             return;
         }
 

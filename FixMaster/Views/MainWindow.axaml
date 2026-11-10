@@ -1,15 +1,115 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:FixMaster.ViewModels"
+        xmlns:admin="using:FixMaster.Views.Admin"
         x:Class="FixMaster.Views.MainWindow"
         x:DataType="vm:MainViewModel"
         Title="FixMaster"
         Icon="/Assets/logos/logo_vb_colorido.ico"
-        Width="960"
-        Height="640"
-        MinWidth="720"
-        MinHeight="520"
-        WindowStartupLocation="CenterScreen"
-        Background="{DynamicResource SfBgBrush}">
-    <ContentControl Content="{Binding CurrentScreen}" />
+        WindowState="FullScreen"
+        Background="{DynamicResource SwBgBrush}"
+        FontFamily="Futura, Jost, Century Gothic, Segoe UI">
+
+    <Grid RowDefinitions="*,56" ColumnDefinitions="Auto,*">
+
+        <!-- Fundo decorativo (compartilhado por todas as telas) -->
+        <Panel Grid.Row="0" Grid.ColumnSpan="2"
+               ClipToBounds="True" IsHitTestVisible="False">
+            <Border Background="{DynamicResource SwDiamondBrush}" />
+            <Border Background="{DynamicResource SwGridBrush}" />
+
+            <Border Width="480" Height="420"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    CornerRadius="90" BorderThickness="64"
+                    BorderBrush="{DynamicResource SwMidBrush}" Opacity="0.55" />
+
+            <Rectangle Height="5" VerticalAlignment="Top" Margin="0,40,40,0"
+                       Fill="{DynamicResource SwMidBrush}" Opacity="0.6" />
+            <Rectangle Height="2" VerticalAlignment="Top" Margin="260,28,0,0"
+                       Fill="{DynamicResource SwMidBrush}" Opacity="0.6" />
+
+            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top"
+                        Margin="0,64,40,0" Spacing="2">
+                <TextBlock Text="FIXMASTER" FontSize="54" FontWeight="Bold"
+                           LetterSpacing="-2" HorizontalAlignment="Right"
+                           Foreground="{DynamicResource SwTitleBrush}" />
+                <TextBlock Text="SISTEMA DE GESTÃO" FontSize="16" FontWeight="SemiBold"
+                           LetterSpacing="7" HorizontalAlignment="Right"
+                           Foreground="{DynamicResource SwTitleBrush}" />
+            </StackPanel>
+
+            <Canvas Width="320" Height="520"
+                    HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                <Canvas.Styles>
+                    <Style Selector="Path">
+                        <Setter Property="Stroke" Value="{DynamicResource SwMidBrush}" />
+                        <Setter Property="StrokeThickness" Value="34" />
+                        <Setter Property="Opacity" Value="0.7" />
+                        <Setter Property="Data" Value="M0,0 L0,330 C0,390 -70,430 -150,480" />
+                    </Style>
+                </Canvas.Styles>
+                <Path Canvas.Left="290" Canvas.Top="60" />
+                <Path Canvas.Left="244" Canvas.Top="20" />
+                <Path Canvas.Left="198" Canvas.Top="70" />
+                <Path Canvas.Left="152" Canvas.Top="0" />
+            </Canvas>
+        </Panel>
+
+        <Border x:DataType="vm:MainViewModel"
+                Grid.Row="0" Grid.Column="0" Width="240"
+                Background="{DynamicResource SwBarBrush}"
+                IsVisible="{Binding IsAdministrador}">
+            <StackPanel Margin="16,22" Spacing="18">
+                <Image Source="avares://FixMaster/Assets/logos/logo_vb_preto_branco.ico"
+                       Width="72" Height="72" Stretch="Uniform"
+                       HorizontalAlignment="Left" />
+
+                <StackPanel Spacing="8">
+                    <TextBlock Text="ADMINISTRAÇÃO" FontSize="11"
+                               FontWeight="SemiBold" LetterSpacing="3"
+                               Foreground="#8E8E91" />
+                    <Button Classes="sw-accent"
+                            Command="{Binding AbrirCadastroUsuarioCommand}"
+                            HorizontalContentAlignment="Left"
+                            Padding="12,14"
+                            MinHeight="48">
+                        <TextBlock Text="ACESSO DE ADMINISTRADOR"
+                                   FontSize="12"
+                                   LetterSpacing="1"
+                                   TextWrapping="Wrap" />
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Tela atual (login, painel, etc.) -->
+        <ContentControl Grid.Row="0" Grid.Column="1"
+                        Content="{Binding CurrentScreen}" />
+
+        <Grid Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
+              IsVisible="{Binding IsCadastroUsuarioAberto}"
+              Panel.ZIndex="10">
+            <Border Background="#99000000" />
+            <admin:CadastroUsuarioView DataContext="{Binding CadastroUsuario}"
+                                       HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Stretch" />
+        </Grid>
+
+        <!-- Barra inferior -->
+        <Border Grid.Row="1" Grid.ColumnSpan="2"
+                Background="{DynamicResource SwBarBrush}">
+            <Grid ColumnDefinitions="*,Auto,Auto" Margin="24,0" ColumnSpacing="18">
+                <TextBlock Text="FIXMASTER · v1.0" FontSize="11" LetterSpacing="3"
+                           Foreground="#6E6E72" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="SISTEMA DE GESTÃO" FontSize="11"
+                           LetterSpacing="3" Foreground="#E8E8EA"
+                           VerticalAlignment="Center" />
+                <Button Grid.Column="2" Classes="sw-accent"
+                        Content="SAIR DA APLICAÇÃO"
+                        FontSize="11" LetterSpacing="1"
+                        Padding="14,8" MinHeight="38"
+                        Click="Sair_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
 </Window>

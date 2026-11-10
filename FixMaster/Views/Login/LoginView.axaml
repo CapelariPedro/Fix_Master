@@ -2,38 +2,110 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:FixMaster.ViewModels"
              x:Class="FixMaster.Views.Login.LoginView"
-             x:DataType="vm:LoginViewModel">
-    <Grid>
-        <StackPanel Width="380"
-                    Spacing="24"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-            <Image Source="avares://FixMaster/Assets/logos/logo_vb_colorido.png"
-                   Height="112"
-                   Stretch="Uniform" />
+             x:DataType="vm:LoginViewModel"
+             FontFamily="Futura, Jost, Century Gothic, Segoe UI">
 
-            <Border Classes="panel" Padding="28">
-                <StackPanel Spacing="16">
+    <UserControl.Resources>
+        <!-- Paleta Starware -->
+        <Color x:Key="SwBgColor">#A9A9AB</Color>
+        <SolidColorBrush x:Key="SwBgBrush" Color="{StaticResource SwBgColor}" />
+        <SolidColorBrush x:Key="SwLineBrush" Color="#8E8E91" />
+        <SolidColorBrush x:Key="SwMidBrush" Color="#7A7A7E" />
+        <SolidColorBrush x:Key="SwTitleBrush" Color="#6B6B6F" />
+        <SolidColorBrush x:Key="SwPanelBrush" Color="#D4D4D6" />
+        <SolidColorBrush x:Key="SwInkBrush" Color="#2A2A2D" />
+        <SolidColorBrush x:Key="SwBarBrush" Color="#1A1A1C" />
+
+        <!-- Grade -->
+        <DrawingBrush x:Key="SwGridBrush" TileMode="Tile"
+                      SourceRect="0,0,24,24" DestinationRect="0,0,24,24"
+                      Opacity="0.55">
+            <DrawingBrush.Drawing>
+                <GeometryDrawing Geometry="M0,0 L24,0 M0,0 L0,24">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="{StaticResource SwLineBrush}" Thickness="1" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+
+        <!-- Losangos -->
+        <DrawingBrush x:Key="SwDiamondBrush" TileMode="Tile"
+                      SourceRect="0,0,48,48" DestinationRect="0,0,48,48"
+                      Opacity="0.35">
+            <DrawingBrush.Drawing>
+                <GeometryDrawing Brush="{StaticResource SwMidBrush}"
+                                 Geometry="M24,19 L29,24 L24,29 L19,24 Z" />
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <Style Selector="TextBlock.sw-label">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="LetterSpacing" Value="3" />
+            <Setter Property="Foreground" Value="{StaticResource SwMidBrush}" />
+        </Style>
+
+        <Style Selector="TextBox.sw-input">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{StaticResource SwInkBrush}" />
+            <Setter Property="CaretBrush" Value="{StaticResource SwInkBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource SwMidBrush}" />
+            <Setter Property="BorderThickness" Value="0,0,0,2" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="4,10" />
+        </Style>
+        <Style Selector="TextBox.sw-input:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="#0D000000" />
+            <Setter Property="BorderBrush" Value="{StaticResource SwInkBrush}" />
+        </Style>
+        <Style Selector="TextBox.sw-input:focus /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="#1A000000" />
+            <Setter Property="BorderBrush" Value="{StaticResource SwBarBrush}" />
+        </Style>
+
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="*,56">
+
+        <!-- ===== Card de login ===== -->
+        <Border Grid.Row="0" Width="400"
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                Background="{StaticResource SwPanelBrush}"
+                BorderBrush="{StaticResource SwMidBrush}" BorderThickness="1"
+                BoxShadow="0 10 30 0 #55000000">
+            <StackPanel>
+                <!-- faixa de cabeçalho -->
+                <Border Background="{StaticResource SwBarBrush}" Padding="20,10">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Text="AUTENTICAÇÃO" FontSize="12" FontWeight="SemiBold"
+                                   LetterSpacing="4" Foreground="#E8E8EA"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+
+                <StackPanel Spacing="18" Margin="28,24,28,28">
+                    <Image Source="avares://FixMaster/Assets/logos/logo_vb_preto_branco.ico" Width="72"
+                           Height="72" Stretch="Uniform" />
+
+                    <TextBlock Text="Acesse sua conta para continuar"
+                               HorizontalAlignment="Center" FontSize="13"
+                               Foreground="{StaticResource SwMidBrush}" />
+
                     <StackPanel Spacing="4">
-                        <TextBlock Text="FIXMASTER"
-                                   FontSize="24"
-                                   FontWeight="SemiBold"
-                                   HorizontalAlignment="Center" />
-                        <TextBlock Classes="muted"
-                                   Text="Acesse sua conta para continuar"
-                                   HorizontalAlignment="Center" />
-                    </StackPanel>
-
-                    <StackPanel Spacing="6">
-                        <TextBlock Classes="label" Text="USUÁRIO" />
-                        <TextBox Text="{Binding Usuario, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBlock Classes="sw-label" Text="USUÁRIO" />
+                        <TextBox Classes="sw-input"
+                                 Text="{Binding Usuario, UpdateSourceTrigger=PropertyChanged}"
                                  PlaceholderText="Digite seu usuário"
                                  MinHeight="42" />
                     </StackPanel>
 
-                    <StackPanel Spacing="6">
-                        <TextBlock Classes="label" Text="SENHA" />
-                        <TextBox Text="{Binding Senha, UpdateSourceTrigger=PropertyChanged}"
+                    <StackPanel Spacing="4">
+                        <TextBlock Classes="sw-label" Text="SENHA" />
+                        <TextBox Classes="sw-input"
+                                 Text="{Binding Senha, UpdateSourceTrigger=PropertyChanged}"
                                  PasswordChar="●"
                                  PlaceholderText="Digite sua senha"
                                  MinHeight="42" />
@@ -44,15 +116,35 @@
                                Foreground="{DynamicResource SfDangerBrush}"
                                TextWrapping="Wrap" />
 
-                    <Button Classes="accent"
+                    <Button Classes="sw-accent"
                             Content="ENTRAR"
                             Command="{Binding EntrarCommand}"
                             IsDefault="True"
                             HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Center"
-                            MinHeight="44" />
+                            MinHeight="46" />
                 </StackPanel>
-            </Border>
-        </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- ===== Barra inferior ===== -->
+        <Border Grid.Row="1" Background="{StaticResource SwBarBrush}">
+            <Grid ColumnDefinitions="*,Auto" Margin="40,0">
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="14"
+                            VerticalAlignment="Center">
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="CONFIRMAR" FontSize="11" LetterSpacing="2"
+                                   Foreground="#E8E8EA" HorizontalAlignment="Right" />
+                        <TextBlock Text="PRESSIONE ENTER" FontSize="11" LetterSpacing="2"
+                                   Foreground="#6E6E72" HorizontalAlignment="Right" />
+                    </StackPanel>
+                    <Border Width="38" Height="38" CornerRadius="19"
+                            BorderBrush="#E8E8EA" BorderThickness="1.5">
+                        <TextBlock Text="↵" FontSize="16" Foreground="#E8E8EA"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

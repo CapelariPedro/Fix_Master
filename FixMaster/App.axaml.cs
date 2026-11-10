@@ -28,7 +28,6 @@ public partial class App : Application
             services.AddDbContextFactory<AppDbContext>(options =>
                 options.UseSqlite($"Data Source={DbPaths.DatabaseFile}"));
             services.AddSingleton<IAuthService, AuthService>();
-            services.AddSingleton<DbSeeder>();
             services.AddSingleton<MainViewModel>();
             _services = services.BuildServiceProvider();
 
@@ -36,7 +35,6 @@ public partial class App : Application
             using (var db = factory.CreateDbContext())
                 db.Database.Migrate();
 
-            _services.GetRequiredService<DbSeeder>().Seed();
             desktop.MainWindow = new MainWindow
             {
                 DataContext = _services.GetRequiredService<MainViewModel>()
