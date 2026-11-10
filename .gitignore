@@ -1,0 +1,35 @@
+# .NET build outputs
+**/bin/
+**/obj/
+**/publish/
+**/TestResults/
+**/artifacts/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# IDEs
+.vs/
+
+# Application data and logs
+fixmaster.db3
+fixmaster.db3-*
+*.log
+
+# Linux / Fedora
+*~
+*.swp
+*.swo
+.directory
+.Trash-*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
