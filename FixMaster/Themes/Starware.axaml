@@ -1,0 +1,101 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Styles.Resources>
+        <SolidColorBrush x:Key="SwBgBrush" Color="#A9A9AB" />
+        <SolidColorBrush x:Key="SwLineBrush" Color="#8E8E91" />
+        <SolidColorBrush x:Key="SwMidBrush" Color="#7A7A7E" />
+        <SolidColorBrush x:Key="SwTitleBrush" Color="#6B6B6F" />
+        <SolidColorBrush x:Key="SwPanelBrush" Color="#D4D4D6" />
+        <SolidColorBrush x:Key="SwInkBrush" Color="#2A2A2D" />
+        <SolidColorBrush x:Key="SwBarBrush" Color="#1A1A1C" />
+
+        <DrawingBrush x:Key="SwGridBrush" TileMode="Tile"
+                      SourceRect="0,0,24,24" DestinationRect="0,0,24,24" Opacity="0.55">
+            <DrawingBrush.Drawing>
+                <GeometryDrawing Geometry="M0,0 L24,0 M0,0 L0,24">
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="#8E8E91" Thickness="1" />
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+
+        <DrawingBrush x:Key="SwDiamondBrush" TileMode="Tile"
+                      SourceRect="0,0,48,48" DestinationRect="0,0,48,48" Opacity="0.35">
+            <DrawingBrush.Drawing>
+                <GeometryDrawing Brush="#7A7A7E" Geometry="M24,19 L29,24 L24,29 L19,24 Z" />
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+    </Styles.Resources>
+
+    <Style Selector="TextBlock.sw-label">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="LetterSpacing" Value="3" />
+        <Setter Property="Foreground" Value="{DynamicResource SwMidBrush}" />
+    </Style>
+
+    <Style Selector="Button">
+        <Setter Property="Background" Value="{DynamicResource SwPanelBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource SwInkBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SwMidBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <Path Data="M 0.08,0 L 1,0 L 1,1 L 0,1 L 0,0.25 Z"
+                          Stretch="Fill"
+                          Fill="{TemplateBinding Background}"
+                          IsHitTestVisible="False" />
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      Padding="{TemplateBinding Padding}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+    <Style Selector="Button:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SwMidBrush}" />
+    </Style>
+    <Style Selector="Button:pressed">
+        <Setter Property="Background" Value="{DynamicResource SwBarBrush}" />
+        <Setter Property="Foreground" Value="#E8E8EA" />
+    </Style>
+
+    <Style Selector="TextBox.sw-input">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource SwInkBrush}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource SwInkBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SwMidBrush}" />
+        <Setter Property="BorderThickness" Value="0,0,0,2" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Padding" Value="4,10" />
+    </Style>
+    <Style Selector="TextBox.sw-input:pointerover /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="#0D000000" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SwInkBrush}" />
+    </Style>
+    <Style Selector="TextBox.sw-input:focus /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="#1A000000" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SwBarBrush}" />
+    </Style>
+
+    <Style Selector="Button.sw-accent">
+        <Setter Property="Background" Value="{DynamicResource SwInkBrush}" />
+        <Setter Property="Foreground" Value="#E8E8EA" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="Button.sw-accent:pointerover">
+        <Setter Property="Background" Value="#4A4A4E" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector="Button.sw-accent:pressed">
+        <Setter Property="Background" Value="#111113" />
+    </Style>
+</Styles>

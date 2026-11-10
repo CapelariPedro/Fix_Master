@@ -6,6 +6,9 @@
              x:Class="FixMaster.App">
 
     <Application.DataTemplates>
+        <DataTemplate DataType="{x:Type vm:PrimeiroAcessoViewModel}">
+            <login:PrimeiroAcessoView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:LoginViewModel}">
             <login:LoginView />
         </DataTemplate>
@@ -16,7 +19,7 @@
 
     <Application.Styles>
         <FluentTheme />
-        <StyleInclude Source="avares://FixMaster/Themes/StarfieldStyles.axaml" />
+        <StyleInclude Source="avares://FixMaster/Themes/Starware.axaml" />
     </Application.Styles>
 
     <Application.Resources>

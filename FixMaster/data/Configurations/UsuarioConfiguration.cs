@@ -20,5 +20,6 @@ public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
         builder.HasIndex(u => u.Username).IsUnique();
 
         builder.Property(u => u.SenhaHash).IsRequired();
+        builder.Property(u => u.EhAdministrador).IsRequired();
     }
 }

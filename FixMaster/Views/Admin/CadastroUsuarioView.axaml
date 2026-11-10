@@ -1,0 +1,146 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FixMaster.ViewModels"
+             x:Class="FixMaster.Views.Admin.CadastroUsuarioView"
+             x:DataType="vm:CadastroUsuarioViewModel"
+             FontFamily="Futura, Jost, Century Gothic, Segoe UI">
+
+    <Grid>
+        <Border Width="480" MaxHeight="760" Margin="24"
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                Background="Transparent"
+                BorderThickness="0"
+                BoxShadow="0 10 30 0 #55000000">
+            <Grid>
+                <Path Data="M 0.05,0 L 1,0 L 1,1 L 0,1 L 0,0.035 Z"
+                      Stretch="Fill"
+                      Fill="{DynamicResource SwPanelBrush}"
+                      Stroke="{DynamicResource SwMidBrush}"
+                      StrokeThickness="1"
+                      IsHitTestVisible="False" />
+                <Grid RowDefinitions="48,*">
+                    <Grid Grid.Row="0" Height="48">
+                        <Path Data="M 0.05,0 L 1,0 L 1,1 L 0,1 L 0,0.5 Z"
+                              Stretch="Fill"
+                              Fill="{DynamicResource SwBarBrush}"
+                              IsHitTestVisible="False" />
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="ACESSO DE ADMINISTRADOR"
+                                       Margin="22,0,0,0"
+                                       FontSize="12" FontWeight="SemiBold"
+                                       LetterSpacing="3" Foreground="#E8E8EA"
+                                       VerticalAlignment="Center" />
+                            <Button Grid.Column="1"
+                                    Content="×"
+                                    Command="{Binding CancelarCommand}"
+                                    FontSize="24"
+                                    Foreground="#E8E8EA"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Padding="8,0"
+                                    MinWidth="36"
+                                    MinHeight="36"
+                                    VerticalAlignment="Center"
+                                    ToolTip.Tip="Fechar" />
+                        </Grid>
+                        <Rectangle Height="1"
+                                   Fill="{DynamicResource SwMidBrush}"
+                                   VerticalAlignment="Bottom" />
+                    </Grid>
+
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="30,22" Spacing="14">
+                            <Image Source="avares://FixMaster/Assets/logos/logo_vb_preto_branco.ico"
+                                   Width="68" Height="68" Stretch="Uniform"
+                                   HorizontalAlignment="Center" />
+
+                            <TextBlock Classes="sw-label" Text="CONFIRME O ACESSO DE ADMINISTRADOR"
+                                       TextWrapping="Wrap" />
+
+                            <StackPanel Spacing="4">
+                                <TextBlock Classes="sw-label" Text="USUÁRIO ADMINISTRADOR" />
+                                <TextBox Classes="sw-input"
+                                         Text="{Binding UsuarioAdministrador, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="Digite seu usuário"
+                                         MinHeight="42" />
+                            </StackPanel>
+
+                            <StackPanel Spacing="4">
+                                <TextBlock Classes="sw-label" Text="SENHA DO ADMINISTRADOR" />
+                                <TextBox Classes="sw-input"
+                                         Text="{Binding SenhaAdministrador, UpdateSourceTrigger=PropertyChanged}"
+                                         PasswordChar="●"
+                                         PlaceholderText="Confirme sua senha"
+                                         MinHeight="42" />
+                            </StackPanel>
+
+                            <Rectangle Height="1" Fill="{DynamicResource SwLineBrush}"
+                                       Margin="0,4" />
+
+                            <TextBlock Text="Criar novo usuário"
+                                       FontSize="20" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource SwInkBrush}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="Informe os dados para adicionar um usuário ao sistema."
+                                       FontSize="13" TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SwMidBrush}"
+                                       HorizontalAlignment="Center" />
+
+                            <CheckBox Content="Cadastrar como administrador"
+                                      IsChecked="{Binding NovoUsuarioAdministrador, Mode=TwoWay}" />
+
+                            <StackPanel Spacing="4">
+                                <TextBlock Classes="sw-label" Text="USUÁRIO" />
+                                <TextBox Classes="sw-input"
+                                         Text="{Binding Usuario, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="Digite o nome do usuário"
+                                         MinHeight="42" />
+                            </StackPanel>
+
+                            <StackPanel Spacing="4">
+                                <TextBlock Classes="sw-label" Text="SENHA" />
+                                <TextBox Classes="sw-input"
+                                         Text="{Binding Senha, UpdateSourceTrigger=PropertyChanged}"
+                                         PasswordChar="●"
+                                         PlaceholderText="Mínimo de 8 caracteres"
+                                         MinHeight="42" />
+                            </StackPanel>
+
+                            <StackPanel Spacing="4">
+                                <TextBlock Classes="sw-label" Text="CONFIRMAR SENHA" />
+                                <TextBox Classes="sw-input"
+                                         Text="{Binding ConfirmarSenha, UpdateSourceTrigger=PropertyChanged}"
+                                         PasswordChar="●"
+                                         PlaceholderText="Repita a senha"
+                                         MinHeight="42" />
+                            </StackPanel>
+
+                            <TextBlock Text="{Binding MensagemErro}"
+                                       IsVisible="{Binding MensagemErro, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       Foreground="{DynamicResource SfDangerBrush}"
+                                       TextWrapping="Wrap" />
+
+                            <TextBlock Text="{Binding MensagemSucesso}"
+                                       IsVisible="{Binding MensagemSucesso, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       Foreground="#245C36"
+                                       TextWrapping="Wrap" />
+
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,6,0,0">
+                                <Button Content="CANCELAR"
+                                        Command="{Binding CancelarCommand}"
+                                        HorizontalContentAlignment="Center"
+                                        MinHeight="44" />
+                                <Button Grid.Column="1" Classes="sw-accent"
+                                        Content="CRIAR USUÁRIO"
+                                        Command="{Binding CriarCommand}"
+                                        IsDefault="True"
+                                        HorizontalContentAlignment="Center"
+                                        MinHeight="44" />
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

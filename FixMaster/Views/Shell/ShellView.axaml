@@ -1,7 +1,136 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:FixMaster.ViewModels"
+             xmlns:infra="using:FixMaster.Infrastructure"
              x:Class="FixMaster.Views.Shell.ShellView"
              x:DataType="vm:ShellViewModel">
-    <Grid Background="{DynamicResource SfBgBrush}" />
+    <Grid>
+        <Grid IsVisible="{Binding IsAdministrador}" Margin="24">
+            <Path Data="M 0.075,0 L 1,0 L 1,1 L 0,1 L 0,0.075 Z"
+                  Stretch="Fill"
+                  Fill="{DynamicResource SwPanelBrush}"
+                  Stroke="{DynamicResource SwMidBrush}"
+                  StrokeThickness="2"
+                  IsHitTestVisible="False" />
+            <Grid RowDefinitions="Auto,*" Margin="30,22,22,20">
+                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,18">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="USUÁRIOS CADASTRADOS"
+                                   FontSize="23" FontWeight="SemiBold"
+                                   LetterSpacing="2"
+                                   Foreground="{DynamicResource SwInkBrush}" />
+                        <TextBlock Text="Gerencie os acessos ao sistema."
+                                   FontSize="13"
+                                   Foreground="{DynamicResource SwMidBrush}" />
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="ATUALIZAR"
+                            Command="{Binding AtualizarCommand}"
+                            VerticalAlignment="Center"
+                            Padding="16,8" />
+                </Grid>
+
+                <Grid Grid.Row="1" RowDefinitions="Auto,*">
+                    <StackPanel Spacing="6" Margin="0,0,0,8">
+                        <TextBlock Text="Carregando usuários..."
+                                   IsVisible="{Binding IsCarregando}"
+                                   Foreground="{DynamicResource SwInkBrush}" />
+                        <TextBlock Text="{Binding MensagemErro}"
+                                   IsVisible="{Binding MensagemErro, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                   Foreground="{DynamicResource SfDangerBrush}"
+                                   TextWrapping="Wrap" />
+                        <TextBlock Text="{Binding MensagemSucesso}"
+                                   IsVisible="{Binding MensagemSucesso, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                   Foreground="#245C36"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding Usuarios}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="infra:UsuarioResumo">
+                                    <Border Background="#18FFFFFF"
+                                            BorderBrush="{DynamicResource SwLineBrush}"
+                                            BorderThickness="0,0,0,1"
+                                            Padding="12,8"
+                                            Margin="0,0,0,4">
+                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                                            <StackPanel Spacing="3" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Username}"
+                                                           FontSize="16" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource SwInkBrush}" />
+                                                <TextBlock Text="{Binding Perfil}"
+                                                           FontSize="9" FontWeight="SemiBold"
+                                                           LetterSpacing="2"
+                                                           Foreground="{DynamicResource SwMidBrush}" />
+                                            </StackPanel>
+                                            <Button Grid.Column="1" Content="EXCLUIR"
+                                                    Classes="sw-accent"
+                                                    Command="{Binding $parent[UserControl].DataContext.SolicitarExclusaoCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    VerticalAlignment="Center"
+                                                    Padding="14,7" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <StackPanel IsVisible="{Binding IsOperador}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Spacing="10">
+            <TextBlock Text="PAINEL DE CONTROLE"
+                       FontSize="26" FontWeight="SemiBold" LetterSpacing="2"
+                       Foreground="{DynamicResource SwInkBrush}"
+                       HorizontalAlignment="Center" />
+            <TextBlock Text="Bem-vindo ao FixMaster."
+                       Foreground="{DynamicResource SwMidBrush}"
+                       HorizontalAlignment="Center" />
+        </StackPanel>
+
+        <Grid IsVisible="{Binding IsConfirmacaoExclusaoAberta}"
+              Panel.ZIndex="10">
+            <Border Background="#99000000" />
+            <Border MaxWidth="520" MaxHeight="420" Margin="24"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    BoxShadow="0 10 30 0 #55000000">
+                <Grid>
+                    <Path Data="M 0.08,0 L 1,0 L 1,1 L 0,1 L 0,0.08 Z"
+                          Stretch="Fill"
+                          Fill="{DynamicResource SwPanelBrush}"
+                          Stroke="{DynamicResource SwMidBrush}"
+                          StrokeThickness="2"
+                          IsHitTestVisible="False" />
+                    <StackPanel Margin="38,32,28,28" Spacing="18">
+                        <TextBlock Text="CONFIRMAR EXCLUSÃO"
+                                   FontSize="14" FontWeight="SemiBold"
+                                   LetterSpacing="2"
+                                   Foreground="{DynamicResource SwInkBrush}" />
+                        <TextBlock TextWrapping="Wrap"
+                                   FontSize="15"
+                                   Foreground="{DynamicResource SwInkBrush}">
+                            <Run Text="Deseja realmente excluir o usuário " />
+                            <Run Text="{Binding UsuarioParaExcluir.Username}"
+                                 FontWeight="Bold" />
+                            <Run Text="? Esta ação não pode ser desfeita." />
+                        </TextBlock>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                            <Button Content="CANCELAR"
+                                    Command="{Binding CancelarExclusaoCommand}"
+                                    HorizontalContentAlignment="Center"
+                                    MinHeight="44" />
+                            <Button Grid.Column="1" Content="EXCLUIR USUÁRIO"
+                                    Classes="sw-accent"
+                                    Command="{Binding ConfirmarExclusaoCommand}"
+                                    HorizontalContentAlignment="Center"
+                                    MinHeight="44" />
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
 </UserControl>
