@@ -35,16 +35,16 @@ Controlar o acesso ao sistema com credenciais armazenadas de forma segura no ban
 
 ## Tarefas técnicas
 
-- [ ] Criar `Usuario` e configuração EF (índice único em Username)
-- [ ] Implementar `PasswordHasher` + testes
-- [ ] Implementar `AuthService`
-- [ ] Criar `LoginViewModel` e `LoginView`
-- [ ] Fluxo de primeiro acesso (criar operador)
-- [ ] Troca de tela Login → Shell
+- [X] Criar `Usuario` e configuração EF (índice único em Username)
+- [X] Implementar `PasswordHasher` + testes
+- [X] Implementar `AuthService`
+- [X] Criar `LoginViewModel` e `LoginView`
+- [X] Fluxo de primeiro acesso (criar operador)
+- [X] Troca de tela Login → Shell
 
-## Definição de pronto
+## DSefinição de pronto
 
-- [ ] Todas as histórias da feature concluídas
-- [ ] Regras de negócio cobertas por testes unitários
-- [ ] Funciona offline
-- [ ] Atividade relevante registrada no feed (quando aplicável)
+- [X] Todas as histórias da feature concluídas
+- [X] Regras de negócio cobertas por testes unitários
+- [X] Funciona offline
+- [X] Atividade relevante registrada no feed (quando aplicável)

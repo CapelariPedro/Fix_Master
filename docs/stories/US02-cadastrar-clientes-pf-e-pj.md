@@ -5,22 +5,23 @@
 | Feature | [F01](../features/) |
 | Requisitos | RF02 |
 | Origem | Pergunta 2 da entrevista |
-| Status | A fazer |
+| Status | Implementada |
 
 ## História
 
 **Como** operador,
-**quero** cadastrar pessoas físicas e empresas com nome, telefone, endereço e documento,
+**quero** cadastrar pessoas físicas e empresas com nome, telefone, endereço, CEP opcional e documento,
 **para** encontrar o cliente depois com facilidade.
 
 ## Critérios de aceite
 
-- [ ] É possível cadastrar cliente pessoa física (CPF) e pessoa jurídica (CNPJ).
-- [ ] O documento é validado e deve ser único.
-- [ ] É possível consultar por nome, telefone ou documento.
-- [ ] É possível atualizar os dados de um cliente.
-- [ ] Cliente sem vínculos pode ser excluído; com agendamento/OS vinculado, a exclusão é bloqueada ou substituída por inativação (soft delete).
-- [ ] Mensagens de validação são claras e indicam o campo com problema (RNF08).
+- [x] É possível cadastrar cliente pessoa física (CPF) e pessoa jurídica (CNPJ).
+- [x] O documento é validado e deve ser único.
+- [x] É possível consultar por nome, telefone ou documento.
+- [x] CEP é opcional, recebe máscara automática e o endereço é informado manualmente.
+- [x] É possível atualizar os dados de um cliente.
+- [x] Cliente sem vínculos pode ser excluído; com agendamento/OS vinculado, a exclusão é substituída por inativação (soft delete).
+- [x] Mensagens de validação são claras e indicam o campo com problema (RNF08).
 
 ## Notas técnicas
 
@@ -29,7 +30,7 @@
 
 ## Definição de pronto
 
-- [ ] Critérios de aceite atendidos
-- [ ] Testes escritos e passando
-- [ ] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
+- [x] Critérios de aceite atendidos
+- [x] Testes escritos e passando
+- [x] Interface segue o aspecto Starfield atual
 - [ ] Merge na `develop` via pull request

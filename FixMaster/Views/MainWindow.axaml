@@ -56,30 +56,65 @@
         </Panel>
 
         <Border x:DataType="vm:MainViewModel"
-                Grid.Row="0" Grid.Column="0" Width="240"
+                Grid.Row="0" Grid.Column="0" Width="220"
                 Background="{DynamicResource SwBarBrush}"
-                IsVisible="{Binding IsAdministrador}">
-            <StackPanel Margin="16,22" Spacing="18">
-                <Image Source="avares://FixMaster/Assets/logos/logo_vb_preto_branco.ico"
-                       Width="72" Height="72" Stretch="Uniform"
-                       HorizontalAlignment="Left" />
-
-                <StackPanel Spacing="8">
-                    <TextBlock Text="ADMINISTRAÇÃO" FontSize="11"
-                               FontWeight="SemiBold" LetterSpacing="3"
+                IsVisible="{Binding IsPainelAutenticado}">
+            <Grid RowDefinitions="Auto,*,Auto">
+                <StackPanel Grid.Row="0" Margin="16,18,16,24" Spacing="10">
+                    <Image Source="avares://FixMaster/Assets/logos/logo_vb_preto_branco.ico"
+                           Width="58" Height="58" Stretch="Uniform"
+                           HorizontalAlignment="Left" />
+                    <TextBlock Text="FIXMASTER"
+                               FontSize="14" FontWeight="Bold"
+                               LetterSpacing="2"
+                               Foreground="#E8E8EA" />
+                    <TextBlock Text="ÁREA DE TRABALHO"
+                               FontSize="9" FontWeight="SemiBold"
+                               LetterSpacing="2"
                                Foreground="#8E8E91" />
-                    <Button Classes="sw-accent"
-                            Command="{Binding AbrirCadastroUsuarioCommand}"
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Spacing="6">
+                    <Button Classes="sw-nav"
+                            Command="{Binding AbrirInicioCommand}"
                             HorizontalContentAlignment="Left"
-                            Padding="12,14"
-                            MinHeight="48">
-                        <TextBlock Text="ACESSO DE ADMINISTRADOR"
-                                   FontSize="12"
-                                   LetterSpacing="1"
-                                   TextWrapping="Wrap" />
+                            Padding="16,12" MinHeight="42">
+                        <TextBlock Text="INÍCIO" FontSize="11" LetterSpacing="1" />
+                    </Button>
+                    <Button Classes="sw-nav"
+                            Command="{Binding AbrirClientesCommand}"
+                            HorizontalContentAlignment="Left"
+                            Padding="16,12" MinHeight="42">
+                        <TextBlock Text="CLIENTES" FontSize="11" LetterSpacing="1" />
+                    </Button>
+                    <Button Classes="sw-nav"
+                            IsVisible="{Binding IsAdministrador}"
+                            Command="{Binding AbrirUsuariosCommand}"
+                            HorizontalContentAlignment="Left"
+                            Padding="16,12" MinHeight="42">
+                        <TextBlock Text="USUÁRIOS" FontSize="11" LetterSpacing="1" />
                     </Button>
                 </StackPanel>
-            </StackPanel>
+
+                <StackPanel Grid.Row="2" Margin="14" Spacing="10">
+                    <Rectangle Height="1" Fill="#3A3A3D" />
+                    <TextBlock Text="{Binding UsuarioLogadoNome}"
+                               FontSize="11"
+                               Foreground="#E8E8EA"
+                               TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{Binding PerfilLogado}"
+                               FontSize="9"
+                               Foreground="#8E8E91" />
+                    <Button IsVisible="{Binding IsAdministrador}"
+                            Classes="sw-accent"
+                            Command="{Binding AbrirCadastroUsuarioCommand}"
+                            HorizontalContentAlignment="Left"
+                            Padding="12,10" MinHeight="42">
+                        <TextBlock Text="NOVO USUÁRIO"
+                                   FontSize="10" LetterSpacing="1" />
+                    </Button>
+                </StackPanel>
+            </Grid>
         </Border>
 
         <!-- Tela atual (login, painel, etc.) -->
