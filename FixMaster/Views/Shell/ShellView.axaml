@@ -4,16 +4,199 @@
              xmlns:infra="using:FixMaster.Infrastructure"
              x:Class="FixMaster.Views.Shell.ShellView"
              x:DataType="vm:ShellViewModel">
-    <Grid>
-        <Grid IsVisible="{Binding IsAdministrador}" Margin="24">
-            <Path Data="M 0.075,0 L 1,0 L 1,1 L 0,1 L 0,0.075 Z"
+    <Grid ColumnDefinitions="1.6*,*">
+        <Grid Grid.Column="0" Grid.ColumnSpan="{Binding ColSpanClientes}"
+              IsVisible="{Binding IsClientesPanelAberto}" Margin="12"
+              Width="640" Height="760"
+              HorizontalAlignment="Center">
+            <Path Data="M 0,0 L 1,0 L 1,0.925 L 0.925,1 L 0,1 Z"
                   Stretch="Fill"
                   Fill="{DynamicResource SwPanelBrush}"
                   Stroke="{DynamicResource SwMidBrush}"
                   StrokeThickness="2"
                   IsHitTestVisible="False" />
-            <Grid RowDefinitions="Auto,*" Margin="30,22,22,20">
-                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,18">
+            <Grid RowDefinitions="Auto,Auto,*" Margin="28,20,20,18">
+                <Grid ColumnDefinitions="*,Auto,Auto">
+                    <StackPanel Spacing="3">
+                        <TextBlock Text="CLIENTES"
+                                   FontSize="23" FontWeight="SemiBold"
+                                   LetterSpacing="3"
+                                   Foreground="{DynamicResource SwInkBrush}" />
+                        <TextBlock Text="Cadastro e consulta de pessoas físicas e jurídicas."
+                                   FontSize="12"
+                                   Foreground="{DynamicResource SwMidBrush}" />
+                    </StackPanel>
+                    <Button Grid.Column="1" Content="ATUALIZAR"
+                            Command="{Binding AtualizarCommand}"
+                            VerticalAlignment="Center"
+                            Padding="12,7" />
+                    <Button Grid.Column="2" Content="×"
+                            Command="{Binding FecharPainelClientesCommand}"
+                            VerticalAlignment="Center"
+                            Padding="10,5"
+                            MinWidth="34"
+                            ToolTip.Tip="Fechar painel" />
+                </Grid>
+
+                <Grid Grid.Row="1" ColumnDefinitions="*,Auto,Auto"
+                      Margin="0,16,0,18" ColumnSpacing="10">
+                    <TextBox Classes="sw-input"
+                             Text="{Binding FiltroClientes, UpdateSourceTrigger=PropertyChanged}"
+                             PlaceholderText="Buscar por nome, telefone, CPF/CNPJ ou CEP"
+                             MinHeight="40" />
+                    <Button Grid.Column="1" Content="NOVO CLIENTE"
+                            Classes="sw-accent"
+                            Command="{Binding NovoClienteCommand}"
+                            Padding="16,8" />
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding MensagemClientes}"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource SwInkBrush}"
+                               TextWrapping="Wrap" />
+                </Grid>
+
+                <Grid Grid.Row="2" ColumnDefinitions="0.9*,1.1*" ColumnSpacing="16">
+                    <Border Background="#1AFFFFFF"
+                            BorderBrush="{DynamicResource SwLineBrush}"
+                            BorderThickness="1"
+                            Padding="14">
+                        <Grid RowDefinitions="Auto,Auto,*">
+                            <TextBlock Text="LISTA DE CLIENTES"
+                                       Classes="sw-label"
+                                       Margin="0,0,0,10" />
+                            <StackPanel Grid.Row="1" Spacing="5" Margin="0,0,0,8">
+                                <TextBlock Text="Carregando clientes..."
+                                           IsVisible="{Binding IsCarregando}"
+                                           Foreground="{DynamicResource SwInkBrush}" />
+                                <TextBlock Text="{Binding MensagemErro}"
+                                           IsVisible="{Binding MensagemErro, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           Foreground="{DynamicResource SfDangerBrush}"
+                                           TextWrapping="Wrap" />
+                                <TextBlock Text="Nenhum cliente encontrado."
+                                           IsVisible="{Binding NenhumClienteEncontrado}"
+                                           Foreground="{DynamicResource SwMidBrush}" />
+                            </StackPanel>
+                            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding ClientesFiltrados}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="infra:ClienteResumo">
+                                            <Button Width="240" Height="82"
+                                                    HorizontalContentAlignment="Stretch"
+                                                    Command="{Binding $parent[UserControl].DataContext.SelecionarClienteCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    Padding="10,8"
+                                                    Margin="0,0,8,8">
+                                                <Grid ColumnDefinitions="4,*,Auto" ColumnSpacing="8">
+                                                    <Border Background="{DynamicResource SwMidBrush}"
+                                                            IsVisible="{Binding EstaSelecionado}" />
+                                                    <StackPanel Grid.Column="1" Spacing="3">
+                                                        <TextBlock Text="{Binding Nome}"
+                                                                   FontSize="15" FontWeight="SemiBold"
+                                                                   Foreground="{DynamicResource SwInkBrush}"
+                                                                   TextTrimming="CharacterEllipsis" />
+                                                        <TextBlock Text="{Binding DocumentoFormatado}"
+                                                                   FontSize="11"
+                                                                   Foreground="{DynamicResource SwMidBrush}" />
+                                                    </StackPanel>
+                                                    <TextBlock Grid.Column="2"
+                                                               Text="{Binding Perfil}"
+                                                               FontSize="9" FontWeight="SemiBold"
+                                                               LetterSpacing="1"
+                                                               VerticalAlignment="Center"
+                                                               Foreground="{DynamicResource SwMidBrush}" />
+                                                </Grid>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Column="1"
+                            Background="{DynamicResource SwPanelBrush}"
+                            BorderBrush="{DynamicResource SwMidBrush}"
+                            BorderThickness="1"
+                            Padding="22">
+                        <Grid>
+                            <StackPanel IsVisible="{Binding TemClienteSelecionado}"
+                                        Spacing="14">
+                                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                    <StackPanel Spacing="5">
+                                        <TextBlock Text="{Binding ClienteSelecionado.Nome}"
+                                                   FontSize="22" FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource SwInkBrush}"
+                                                   TextWrapping="Wrap" />
+                                        <TextBlock Text="{Binding PerfilClienteSelecionado}"
+                                                   Classes="sw-label" />
+                                    </StackPanel>
+                                    <Button Grid.Column="1" Content="EDITAR"
+                                            Command="{Binding EditarClienteCommand}"
+                                            VerticalAlignment="Center"
+                                            Padding="12,7" />
+                                    <Button Grid.Column="2" Content="EXCLUIR"
+                                            Classes="sw-accent"
+                                            Command="{Binding SolicitarExclusaoClienteCommand}"
+                                            VerticalAlignment="Center"
+                                            Padding="12,7" />
+                                </Grid>
+                                <Rectangle Height="1"
+                                           Fill="{DynamicResource SwLineBrush}" />
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="CPF / CNPJ" Classes="sw-label" />
+                                    <TextBlock Text="{Binding ClienteSelecionado.DocumentoFormatado}"
+                                               FontSize="15"
+                                               Foreground="{DynamicResource SwInkBrush}" />
+                                </StackPanel>
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="CEP" Classes="sw-label" />
+                                    <TextBlock Text="{Binding ClienteSelecionado.CepFormatado}"
+                                               FontSize="15"
+                                               Foreground="{DynamicResource SwInkBrush}" />
+                                </StackPanel>
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="TELEFONE" Classes="sw-label" />
+                                    <TextBlock Text="{Binding ClienteSelecionado.Telefone}"
+                                               FontSize="15"
+                                               Foreground="{DynamicResource SwInkBrush}" />
+                                </StackPanel>
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="ENDEREÇO" Classes="sw-label" />
+                                    <TextBlock Text="{Binding ClienteSelecionado.Endereco}"
+                                               FontSize="15" TextWrapping="Wrap"
+                                               Foreground="{DynamicResource SwInkBrush}" />
+                                </StackPanel>
+                            </StackPanel>
+                            <TextBlock IsVisible="{Binding NenhumClienteSelecionado}"
+                                       Text="Selecione um cliente para visualizar os detalhes."
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SwMidBrush}" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Column="{Binding ColunaUsuarios}"
+              Grid.ColumnSpan="{Binding ColSpanUsuarios}"
+              IsVisible="{Binding IsUsuariosView}" Margin="12"
+              Width="410" Height="760"
+              HorizontalAlignment="Center">
+            <Path Data="M 0,0 L 1,0 L 1,0.925 L 0.925,1 L 0,1 Z"
+                  Stretch="Fill"
+                  Fill="{DynamicResource SwPanelBrush}"
+                  Stroke="{DynamicResource SwMidBrush}"
+                  StrokeThickness="2"
+                  IsHitTestVisible="False" />
+            <Grid RowDefinitions="Auto,*" Margin="28,20,20,18">
+                <Grid ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,18">
                     <StackPanel Spacing="4">
                         <TextBlock Text="USUÁRIOS CADASTRADOS"
                                    FontSize="23" FontWeight="SemiBold"
@@ -26,7 +209,13 @@
                     <Button Grid.Column="1" Content="ATUALIZAR"
                             Command="{Binding AtualizarCommand}"
                             VerticalAlignment="Center"
-                            Padding="16,8" />
+                            Padding="12,7" />
+                    <Button Grid.Column="2" Content="×"
+                            Command="{Binding FecharPainelUsuariosCommand}"
+                            VerticalAlignment="Center"
+                            Padding="10,5"
+                            MinWidth="34"
+                            ToolTip.Tip="Fechar painel" />
                 </Grid>
 
                 <Grid Grid.Row="1" RowDefinitions="Auto,*">
@@ -46,13 +235,19 @@
 
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                         <ItemsControl ItemsSource="{Binding Usuarios}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate x:DataType="infra:UsuarioResumo">
-                                    <Border Background="#18FFFFFF"
+                                    <Border Width="260" Height="84"
+                                            Background="#18FFFFFF"
                                             BorderBrush="{DynamicResource SwLineBrush}"
                                             BorderThickness="0,0,0,1"
                                             Padding="12,8"
-                                            Margin="0,0,0,4">
+                                            Margin="0,0,8,8">
                                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
                                             <StackPanel Spacing="3" VerticalAlignment="Center">
                                                 <TextBlock Text="{Binding Username}"
@@ -79,22 +274,101 @@
             </Grid>
         </Grid>
 
-        <StackPanel IsVisible="{Binding IsOperador}"
-                    HorizontalAlignment="Center" VerticalAlignment="Center"
-                    Spacing="10">
-            <TextBlock Text="PAINEL DE CONTROLE"
-                       FontSize="26" FontWeight="SemiBold" LetterSpacing="2"
-                       Foreground="{DynamicResource SwInkBrush}"
-                       HorizontalAlignment="Center" />
-            <TextBlock Text="Bem-vindo ao FixMaster."
-                       Foreground="{DynamicResource SwMidBrush}"
-                       HorizontalAlignment="Center" />
-        </StackPanel>
-
-        <Grid IsVisible="{Binding IsConfirmacaoExclusaoAberta}"
+        <Grid Grid.ColumnSpan="2" IsVisible="{Binding IsFormularioClienteAberto}"
               Panel.ZIndex="10">
             <Border Background="#99000000" />
-            <Border MaxWidth="520" MaxHeight="420" Margin="24"
+            <Border Width="620" Height="720" Margin="24"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    BoxShadow="0 10 30 0 #55000000">
+                <Grid>
+                    <Path Data="M 0.06,0 L 1,0 L 1,1 L 0,1 L 0,0.06 Z"
+                          Stretch="Fill"
+                          Fill="{DynamicResource SwPanelBrush}"
+                          Stroke="{DynamicResource SwMidBrush}"
+                          StrokeThickness="2"
+                          IsHitTestVisible="False" />
+                    <ScrollViewer Margin="28,26"
+                                  VerticalScrollBarVisibility="Auto">
+                        <StackPanel Spacing="14">
+                            <TextBlock Text="{Binding TituloFormularioCliente}"
+                                       FontSize="18" FontWeight="SemiBold"
+                                       LetterSpacing="2"
+                                       Foreground="{DynamicResource SwInkBrush}" />
+                            <TextBlock Text="Preencha os dados para cadastrar ou atualizar o cliente."
+                                       FontSize="13" TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SwMidBrush}" />
+                            <CheckBox Content="Pessoa jurídica (empresa)"
+                                      IsChecked="{Binding EhEmpresa, Mode=TwoWay}" />
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="{Binding NomeCampoCliente}" Classes="sw-label" />
+                                <TextBox Classes="sw-input"
+                                         Text="{Binding Nome, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="Nome completo ou razão social"
+                                         MaxLength="150"
+                                         MinHeight="40" />
+                            </StackPanel>
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="{Binding TituloDocumento}"
+                                           Classes="sw-label" />
+                                <TextBox x:Name="DocumentoTextBox"
+                                         Classes="sw-input"
+                                         Text="{Binding Documento, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="{Binding PlaceholderDocumento}"
+                                         MaxLength="{Binding MaxCaracteresDocumento}"
+                                         TextChanged="Documento_TextChanged"
+                                         MinHeight="40" />
+                            </StackPanel>
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="TELEFONE" Classes="sw-label" />
+                                <TextBox Classes="sw-input"
+                                         Text="{Binding Telefone, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="Telefone com DDD"
+                                         MaxLength="30"
+                                         MinHeight="40" />
+                            </StackPanel>
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="CEP" Classes="sw-label" />
+                                <TextBox Classes="sw-input"
+                                         Text="{Binding Cep, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="00000-000 (preenchimento manual)"
+                                         MaxLength="{Binding MaxCaracteresCep}"
+                                         TextChanged="Cep_TextChanged"
+                                         MinHeight="40" />
+                            </StackPanel>
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="ENDEREÇO" Classes="sw-label" />
+                                <TextBox Classes="sw-input"
+                                         Text="{Binding Endereco, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="Rua, número, bairro, cidade"
+                                         MaxLength="250"
+                                         MinHeight="40" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding MensagemErroCliente}"
+                                       IsVisible="{Binding MensagemErroCliente, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       Foreground="{DynamicResource SfDangerBrush}"
+                                       TextWrapping="Wrap" />
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,4,0,0">
+                                <Button Content="CANCELAR"
+                                        Command="{Binding CancelarFormularioClienteCommand}"
+                                        HorizontalContentAlignment="Center"
+                                        MinHeight="42" />
+                                <Button Grid.Column="1" Classes="sw-accent"
+                                        Content="SALVAR CLIENTE"
+                                        Command="{Binding SalvarClienteCommand}"
+                                        IsEnabled="{Binding !IsSalvandoCliente}"
+                                        HorizontalContentAlignment="Center"
+                                        MinHeight="42" />
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid Grid.ColumnSpan="2" IsVisible="{Binding IsConfirmacaoExclusaoClienteAberta}"
+              Panel.ZIndex="11">
+            <Border Background="#99000000" />
+            <Border Width="500" Height="260" Margin="24"
                     HorizontalAlignment="Center" VerticalAlignment="Center"
                     BoxShadow="0 10 30 0 #55000000">
                 <Grid>
@@ -104,7 +378,49 @@
                           Stroke="{DynamicResource SwMidBrush}"
                           StrokeThickness="2"
                           IsHitTestVisible="False" />
-                    <StackPanel Margin="38,32,28,28" Spacing="18">
+                    <StackPanel Margin="32" Spacing="16">
+                        <TextBlock Text="CONFIRMAR EXCLUSÃO"
+                                   FontSize="14" FontWeight="SemiBold"
+                                   LetterSpacing="2"
+                                   Foreground="{DynamicResource SwInkBrush}" />
+                        <TextBlock TextWrapping="Wrap"
+                                   FontSize="15"
+                                   Foreground="{DynamicResource SwInkBrush}">
+                            <Run Text="Deseja excluir o cliente " />
+                            <Run Text="{Binding ClienteParaExcluir.Nome}"
+                                 FontWeight="Bold" />
+                            <Run Text="? Se ele possuir vínculos, será inativado." />
+                        </TextBlock>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                            <Button Content="CANCELAR"
+                                    Command="{Binding CancelarExclusaoClienteCommand}"
+                                    HorizontalContentAlignment="Center"
+                                    MinHeight="42" />
+                            <Button Grid.Column="1" Content="EXCLUIR"
+                                    Classes="sw-accent"
+                                    Command="{Binding ConfirmarExclusaoClienteCommand}"
+                                    HorizontalContentAlignment="Center"
+                                    MinHeight="42" />
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid Grid.ColumnSpan="2" IsVisible="{Binding IsConfirmacaoExclusaoAberta}"
+              Panel.ZIndex="12">
+            <Border Background="#99000000" />
+            <Border Width="520" Height="260" Margin="24"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    BoxShadow="0 10 30 0 #55000000">
+                <Grid>
+                    <Path Data="M 0.08,0 L 1,0 L 1,1 L 0,1 L 0,0.08 Z"
+                          Stretch="Fill"
+                          Fill="{DynamicResource SwPanelBrush}"
+                          Stroke="{DynamicResource SwMidBrush}"
+                          StrokeThickness="2"
+                          IsHitTestVisible="False" />
+                    <StackPanel Margin="32" Spacing="16">
                         <TextBlock Text="CONFIRMAR EXCLUSÃO"
                                    FontSize="14" FontWeight="SemiBold"
                                    LetterSpacing="2"

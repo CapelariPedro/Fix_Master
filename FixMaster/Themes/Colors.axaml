@@ -3,12 +3,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- Cores principais -->
-    <Color x:Key="BgColor">#0F141B</Color>
-    <Color x:Key="SurfaceColor">#1A222D</Color>
-    <Color x:Key="AccentColor">#9FB3C8</Color>
-    <Color x:Key="TextColor">#FFFFFF</Color>
-    <Color x:Key="SecondaryTextColor">#A0AAB5</Color>
-    <Color x:Key="BorderColor">#303B49</Color>
+    <Color x:Key="BgColor">#A9A9AB</Color>
+    <Color x:Key="SurfaceColor">#D4D4D6</Color>
+    <Color x:Key="AccentColor">#1A1A1C</Color>
+    <Color x:Key="TextColor">#1A1A1C</Color>
+    <Color x:Key="SecondaryTextColor">#555559</Color>
+    <Color x:Key="BorderColor">#707074</Color>
 
     <!-- Brushes -->
     <SolidColorBrush x:Key="BgBrush"

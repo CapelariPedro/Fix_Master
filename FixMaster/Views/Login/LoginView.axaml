@@ -9,12 +9,13 @@
         <!-- Paleta Starware -->
         <Color x:Key="SwBgColor">#A9A9AB</Color>
         <SolidColorBrush x:Key="SwBgBrush" Color="{StaticResource SwBgColor}" />
-        <SolidColorBrush x:Key="SwLineBrush" Color="#8E8E91" />
-        <SolidColorBrush x:Key="SwMidBrush" Color="#7A7A7E" />
-        <SolidColorBrush x:Key="SwTitleBrush" Color="#6B6B6F" />
+        <SolidColorBrush x:Key="SwLineBrush" Color="#707074" />
+        <SolidColorBrush x:Key="SwMidBrush" Color="#555559" />
+        <SolidColorBrush x:Key="SwTitleBrush" Color="#4A4A4E" />
         <SolidColorBrush x:Key="SwPanelBrush" Color="#D4D4D6" />
-        <SolidColorBrush x:Key="SwInkBrush" Color="#2A2A2D" />
+        <SolidColorBrush x:Key="SwInkBrush" Color="#1A1A1C" />
         <SolidColorBrush x:Key="SwBarBrush" Color="#1A1A1C" />
+        <SolidColorBrush x:Key="SwPlaceholderBrush" Color="#6F6F73" />
 
         <!-- Grade -->
         <DrawingBrush x:Key="SwGridBrush" TileMode="Tile"
@@ -51,6 +52,7 @@
         <Style Selector="TextBox.sw-input">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="{StaticResource SwInkBrush}" />
+            <Setter Property="WatermarkForeground" Value="{StaticResource SwPlaceholderBrush}" />
             <Setter Property="CaretBrush" Value="{StaticResource SwInkBrush}" />
             <Setter Property="BorderBrush" Value="{StaticResource SwMidBrush}" />
             <Setter Property="BorderThickness" Value="0,0,0,2" />

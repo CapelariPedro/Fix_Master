@@ -28,6 +28,7 @@ public partial class App : Application
             services.AddDbContextFactory<AppDbContext>(options =>
                 options.UseSqlite($"Data Source={DbPaths.DatabaseFile}"));
             services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton<IClienteService, ClienteService>();
             services.AddSingleton<MainViewModel>();
             _services = services.BuildServiceProvider();
 
