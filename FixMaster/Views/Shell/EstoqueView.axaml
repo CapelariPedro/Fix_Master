@@ -1,0 +1,361 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FixMaster.ViewModels"
+             xmlns:infra="using:FixMaster.Models"
+             xmlns:controls="using:FixMaster.Views.Shell"
+             x:Class="FixMaster.Views.Shell.EstoqueView"
+             x:DataType="vm:EstoqueViewModel">
+    <Grid RowDefinitions="Auto,*" Margin="12">
+        <Border Background="{DynamicResource SwPanelBrush}"
+                BorderBrush="{DynamicResource SwMidBrush}"
+                BorderThickness="1"
+                Padding="22,16"
+                Margin="0,0,0,12">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Spacing="4" VerticalAlignment="Center">
+                    <TextBlock Text="ESTOQUE E LOCALIZAÇÃO"
+                               FontSize="22" FontWeight="SemiBold"
+                               LetterSpacing="2"
+                               Foreground="{DynamicResource SwInkBrush}" />
+                    <TextBlock Text="Pesquise materiais e encontre a posição no depósito."
+                               FontSize="12"
+                               Foreground="{DynamicResource SwMidBrush}" />
+                </StackPanel>
+                <Button Grid.Column="1"
+                        Classes="sw-accent"
+                        Content="CADASTRAR MATERIAL"
+                        Command="{Binding NovoMaterialCommand}"
+                        Padding="18,10"
+                        VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*,560" ColumnSpacing="12">
+            <Border Background="{DynamicResource SwPanelBrush}"
+                    BorderBrush="{DynamicResource SwMidBrush}"
+                    BorderThickness="1"
+                    Padding="18">
+                <Grid RowDefinitions="Auto,Auto,*,Auto">
+                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                        <TextBox Classes="sw-input"
+                                 Text="{Binding TermoBusca, UpdateSourceTrigger=PropertyChanged}"
+                                 PlaceholderText="Buscar por nome, código ou categoria"
+                                 MinHeight="42"
+                                 KeyDown="Busca_KeyDown" />
+                        <Button Grid.Column="1"
+                                Content="BUSCAR"
+                                Command="{Binding AtualizarCommand}"
+                                Padding="14,8" />
+                        <Button Grid.Column="2"
+                                Content="LIMPAR"
+                                Command="{Binding LimparBuscaCommand}"
+                                Padding="12,8" />
+                    </Grid>
+
+                    <Border Grid.Row="1"
+                            Background="#18000000"
+                            Margin="0,12,0,12"
+                            Padding="16">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Spacing="4" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding MaterialSelecionado.Nome}"
+                                           FontSize="17" FontWeight="SemiBold"
+                                           TextTrimming="CharacterEllipsis"
+                                           Foreground="{DynamicResource SwInkBrush}" />
+                                <TextBlock Text="{Binding MaterialSelecionado.Categoria}"
+                                           FontSize="11"
+                                           Foreground="{DynamicResource SwMidBrush}" />
+                                <TextBlock Text="{Binding MaterialSelecionado.Codigo}"
+                                           FontSize="10" FontWeight="SemiBold"
+                                           LetterSpacing="1"
+                                           Foreground="{DynamicResource SwMidBrush}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Spacing="2" HorizontalAlignment="Center">
+                                <TextBlock Text="LOCALIZAÇÃO"
+                                           FontSize="9" FontWeight="SemiBold"
+                                           LetterSpacing="2"
+                                           HorizontalAlignment="Center"
+                                           Foreground="{DynamicResource SwMidBrush}" />
+                                <TextBlock Text="{Binding LocalizacaoDestaque}"
+                                           FontSize="38" FontWeight="Bold"
+                                           HorizontalAlignment="Center"
+                                           Foreground="{DynamicResource SwInkBrush}" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Grid Grid.Row="2" RowDefinitions="Auto,Auto,*">
+                        <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+                            <TextBlock Text="MATERIAIS CADASTRADOS"
+                                       Classes="sw-label"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding MensagemErro}"
+                                       Foreground="{DynamicResource SfDangerBrush}"
+                                       TextWrapping="Wrap" />
+                        </Grid>
+                        <TextBlock Grid.Row="1"
+                                   Text="{Binding MensagemSucesso}"
+                                   Foreground="#245C36"
+                                   TextWrapping="Wrap"
+                                   Margin="0,0,0,6" />
+                        <Grid Grid.Row="2">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding Materiais}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="infra:ItemEstoque">
+                                            <Button HorizontalContentAlignment="Stretch"
+                                                    Command="{Binding $parent[UserControl].DataContext.SelecionarMaterialCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    Padding="12,9"
+                                                    Margin="0,0,0,6">
+                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                                    <StackPanel Spacing="3">
+                                                        <TextBlock Text="{Binding Nome}"
+                                                                   FontSize="14" FontWeight="SemiBold"
+                                                                   TextTrimming="CharacterEllipsis"
+                                                                   Foreground="{DynamicResource SwInkBrush}" />
+                                                        <TextBlock Text="{Binding Codigo}"
+                                                                   FontSize="10"
+                                                                   Foreground="{DynamicResource SwMidBrush}" />
+                                                        <TextBlock Text="{Binding Categoria}"
+                                                                   FontSize="10"
+                                                                   Foreground="{DynamicResource SwMidBrush}" />
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="1" Spacing="3" HorizontalAlignment="Right">
+                                                        <TextBlock Text="{Binding Prateleira}"
+                                                                   FontSize="15" FontWeight="Bold"
+                                                                   HorizontalAlignment="Right"
+                                                                   Foreground="{DynamicResource SwInkBrush}" />
+                                                        <TextBlock Text="{Binding Quantidade, StringFormat='Qtd. {0}'}"
+                                                                   FontSize="10"
+                                                                   HorizontalAlignment="Right"
+                                                                   Foreground="{DynamicResource SwMidBrush}" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                            <TextBlock Text="Nenhum material encontrado. Revise a busca ou cadastre um material."
+                                       IsVisible="{Binding NenhumMaterialEncontrado}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SwMidBrush}" />
+                        </Grid>
+                    </Grid>
+
+                    <StackPanel Grid.Row="3"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Spacing="8">
+                        <Button Content="EDITAR"
+                                IsEnabled="{Binding TemMaterialSelecionado}"
+                                Command="{Binding EditarMaterialCommand}"
+                                Padding="14,8" />
+                        <Button Content="REMOVER"
+                                IsEnabled="{Binding TemMaterialSelecionado}"
+                                Command="{Binding SolicitarRemocaoCommand}"
+                                Padding="14,8" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <controls:ShelfMatrixView Grid.Column="1" />
+        </Grid>
+
+        <Grid Grid.RowSpan="2"
+              IsVisible="{Binding IsFormularioAberto}"
+              Panel.ZIndex="10">
+            <Border Background="#99000000" />
+            <Border Width="560" Height="660" Margin="24"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    BoxShadow="0 10 30 0 #55000000">
+                <Grid RowDefinitions="52,*">
+                    <Path Data="M 0,0 L 1,0 L 1,0.93 L 0.93,1 L 0,1 Z"
+                          Stretch="Fill"
+                          Fill="{DynamicResource SwPanelBrush}"
+                          Stroke="{DynamicResource SwMidBrush}"
+                          StrokeThickness="2"
+                          Grid.RowSpan="2"
+                          IsHitTestVisible="False" />
+                    <Path Data="M 0,0 L 1,0 L 1,1 L 0,1 Z"
+                          Stretch="Fill"
+                          Fill="{DynamicResource SwBarBrush}"
+                          IsHitTestVisible="False" />
+                    <Grid ColumnDefinitions="*,Auto"
+                          Margin="22,0"
+                          Grid.Row="0">
+                        <TextBlock Text="{Binding TituloFormulario}"
+                                   FontSize="13" FontWeight="SemiBold"
+                                   LetterSpacing="2"
+                                   VerticalAlignment="Center"
+                                   Foreground="#E8E8EA" />
+                        <Button Grid.Column="1"
+                                Content="×"
+                                Command="{Binding CancelarFormularioCommand}"
+                                FontSize="22"
+                                Background="Transparent"
+                                Foreground="#E8E8EA"
+                                BorderThickness="0"
+                                Padding="8,0"
+                                MinWidth="36"
+                                VerticalAlignment="Center" />
+                    </Grid>
+                    <Rectangle Grid.Row="0"
+                               Height="1"
+                               Fill="{DynamicResource SwMidBrush}"
+                               VerticalAlignment="Bottom" />
+                    <ScrollViewer Grid.Row="1"
+                                  Margin="24,16"
+                                  VerticalScrollBarVisibility="Auto">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Informe os dados do material e sua posição física no depósito."
+                                       FontSize="12" TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SwMidBrush}" />
+                            <TextBlock Text="* Campos obrigatórios. A descrição é opcional."
+                                       FontSize="10"
+                                       Foreground="{DynamicResource SwMidBrush}" />
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="CÓDIGO (GERADO AUTOMATICAMENTE)" Classes="sw-label" />
+                                <TextBox Classes="sw-input"
+                                         Text="{Binding Codigo}"
+                                         IsReadOnly="True"
+                                         PlaceholderText="Selecione o tipo para gerar o código"
+                                         MinHeight="40" />
+                            </StackPanel>
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="NOME DO MATERIAL *" Classes="sw-label" />
+                                <TextBox Classes="sw-input"
+                                         Text="{Binding Nome}"
+                                         MaxLength="150"
+                                         PlaceholderText="Nome ou descrição curta"
+                                         MinHeight="40" />
+                            </StackPanel>
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="DESCRIÇÃO" Classes="sw-label" />
+                                <TextBox Classes="sw-input"
+                                         Text="{Binding Descricao}"
+                                         MaxLength="500"
+                                         AcceptsReturn="True"
+                                         TextWrapping="Wrap"
+                                         MinHeight="64" />
+                            </StackPanel>
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="TIPO DE MATERIAL *" Classes="sw-label" />
+                                <ComboBox Classes="sw-select"
+                                          HorizontalAlignment="Stretch"
+                                          ItemsSource="{Binding TiposMaterial}"
+                                          SelectedItem="{Binding Categoria, Mode=TwoWay}"
+                                          SelectionChanged="TipoMaterial_SelectionChanged" />
+                            </StackPanel>
+                            <StackPanel Spacing="4" IsVisible="{Binding EhInsumo}">
+                                <TextBlock Text="TIPO DE INSUMO *" Classes="sw-label" />
+                                <ComboBox Classes="sw-select"
+                                          HorizontalAlignment="Stretch"
+                                          ItemsSource="{Binding TiposInsumo}"
+                                          SelectedItem="{Binding TipoInsumo, Mode=TwoWay}"
+                                          SelectionChanged="TipoInsumo_SelectionChanged" />
+                            </StackPanel>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="QUANTIDADE *" Classes="sw-label" />
+                                    <TextBox Classes="sw-input"
+                                             Text="{Binding Quantidade}"
+                                             PlaceholderText="0"
+                                             MinHeight="40" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Spacing="4">
+                                    <TextBlock Text="PREÇO UNITÁRIO (R$) *" Classes="sw-label" />
+                                    <TextBox Classes="sw-input"
+                                             Text="{Binding PrecoUnitario}"
+                                             PlaceholderText="0,00"
+                                             MinHeight="40" />
+                                </StackPanel>
+                            </Grid>
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="PRATELEIRA (A–G) *" Classes="sw-label" />
+                                    <TextBox Classes="sw-input"
+                                             Text="{Binding Prateleira}"
+                                             MaxLength="1"
+                                             PlaceholderText="Ex.: M"
+                                             MinHeight="40" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Spacing="4">
+                                    <TextBlock Text="POSIÇÃO (1–8) *" Classes="sw-label" />
+                                    <TextBox Classes="sw-input"
+                                             Text="{Binding Posicao}"
+                                             MaxLength="1"
+                                             PlaceholderText="Ex.: 4"
+                                             MinHeight="40" />
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Text="{Binding MensagemErroFormulario}"
+                                       IsVisible="{Binding MensagemErroFormulario, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       Foreground="{DynamicResource SfDangerBrush}"
+                                       TextWrapping="Wrap" />
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,4,0,0">
+                                <Button Content="CANCELAR"
+                                        Command="{Binding CancelarFormularioCommand}"
+                                        HorizontalContentAlignment="Center"
+                                        MinHeight="42" />
+                                <Button Grid.Column="1"
+                                        Classes="sw-accent"
+                                        Content="SALVAR MATERIAL"
+                                        Command="{Binding SalvarMaterialCommand}"
+                                        HorizontalContentAlignment="Center"
+                                        MinHeight="42" />
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid Grid.RowSpan="2"
+              IsVisible="{Binding IsConfirmacaoRemocaoAberta}"
+              Panel.ZIndex="11">
+            <Border Background="#99000000" />
+            <Border Width="460" Height="240" Margin="24"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    BoxShadow="0 10 30 0 #55000000">
+                <Grid>
+                    <Path Data="M 0,0 L 1,0 L 1,0.92 L 0.92,1 L 0,1 Z"
+                          Stretch="Fill"
+                          Fill="{DynamicResource SwPanelBrush}"
+                          Stroke="{DynamicResource SwMidBrush}"
+                          StrokeThickness="2"
+                          IsHitTestVisible="False" />
+                    <StackPanel Margin="28" Spacing="16" VerticalAlignment="Center">
+                        <TextBlock Text="REMOVER MATERIAL"
+                                   FontSize="14" FontWeight="SemiBold"
+                                   LetterSpacing="2"
+                                   Foreground="{DynamicResource SwInkBrush}" />
+                        <TextBlock TextWrapping="Wrap"
+                                   FontSize="14"
+                                   Foreground="{DynamicResource SwInkBrush}">
+                            <Run Text="Deseja remover " />
+                            <Run Text="{Binding MaterialSelecionado.Nome}" FontWeight="Bold" />
+                            <Run Text=" do estoque? O registro será inativado." />
+                        </TextBlock>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                            <Button Content="CANCELAR"
+                                    Command="{Binding CancelarRemocaoCommand}"
+                                    HorizontalContentAlignment="Center"
+                                    MinHeight="42" />
+                            <Button Grid.Column="1"
+                                    Classes="sw-accent"
+                                    Content="REMOVER"
+                                    Command="{Binding ConfirmarRemocaoCommand}"
+                                    HorizontalContentAlignment="Center"
+                                    MinHeight="42" />
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -24,21 +24,6 @@ public sealed class ClienteService : IClienteService
             await using var db = await _factory.CreateDbContextAsync();
             var consulta = db.Clientes.AsNoTracking().Where(cliente => cliente.Ativo);
             filtro = filtro?.Trim();
-            if (!string.IsNullOrEmpty(filtro))
-            {
-                var texto = $"%{EscaparLike(filtro)}%";
-                var documento = DocumentoValidator.NormalizarDocumento(filtro, ehEmpresa: true);
-                var cep = CepFormatter.Normalizar(filtro);
-                var podeBuscarCep = filtro.All(caractere =>
-                    char.IsDigit(caractere) || caractere is '-' or ' ' or '.');
-                consulta = consulta.Where(cliente =>
-                    EF.Functions.Like(cliente.Nome, texto, "\\")
-                    || EF.Functions.Like(cliente.Telefone, texto, "\\")
-                    || (podeBuscarCep && cep.Length > 0
-                        && EF.Functions.Like(cliente.Cep, $"%{cep}%"))
-                    || (documento.Length > 0
-                        && EF.Functions.Like(cliente.Documento, $"%{documento}%")));
-            }
 
             var clientes = await consulta
                 .OrderBy(cliente => cliente.Nome)
@@ -54,6 +39,22 @@ public sealed class ClienteService : IClienteService
                     cliente.EhEmpresa
                 })
                 .ToListAsync();
+
+            if (!string.IsNullOrEmpty(filtro))
+            {
+                var documento = DocumentoValidator.NormalizarDocumento(filtro, ehEmpresa: true);
+                var cep = CepFormatter.Normalizar(filtro);
+                var podeBuscarCep = filtro.All(caractere =>
+                    char.IsDigit(caractere) || caractere is '-' or ' ' or '.');
+
+                clientes = clientes
+                    .Where(cliente =>
+                        TextoHelper.Contem(cliente.Nome, filtro)
+                        || TextoHelper.Contem(cliente.Telefone, filtro)
+                        || (podeBuscarCep && cep.Length > 0 && TextoHelper.Contem(cliente.Cep, cep))
+                        || (documento.Length > 0 && TextoHelper.Contem(cliente.Documento, documento)))
+                    .ToList();
+            }
 
             IReadOnlyList<ClienteResumo> resultado = clientes
                 .Select(cliente => CriarResumo(

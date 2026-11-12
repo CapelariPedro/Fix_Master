@@ -2,13 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:FixMaster.ViewModels"
              xmlns:infra="using:FixMaster.Infrastructure"
+             xmlns:estoque="using:FixMaster.Views.Shell"
              x:Class="FixMaster.Views.Shell.ShellView"
              x:DataType="vm:ShellViewModel">
-    <Grid ColumnDefinitions="1.6*,*">
-        <Grid Grid.Column="0" Grid.ColumnSpan="{Binding ColSpanClientes}"
-              IsVisible="{Binding IsClientesPanelAberto}" Margin="12"
-              Width="640" Height="760"
-              HorizontalAlignment="Center">
+    <Grid>
+        <Grid IsVisible="{Binding IsEstoqueView}">
+            <estoque:EstoqueView DataContext="{Binding Estoque}" />
+        </Grid>
+        <Grid IsVisible="{Binding IsClientesPanelAberto}" Margin="12">
             <Path Data="M 0,0 L 1,0 L 1,0.925 L 0.925,1 L 0,1 Z"
                   Stretch="Fill"
                   Fill="{DynamicResource SwPanelBrush}"
@@ -184,11 +185,7 @@
             </Grid>
         </Grid>
 
-        <Grid Grid.Column="{Binding ColunaUsuarios}"
-              Grid.ColumnSpan="{Binding ColSpanUsuarios}"
-              IsVisible="{Binding IsUsuariosView}" Margin="12"
-              Width="410" Height="760"
-              HorizontalAlignment="Center">
+        <Grid IsVisible="{Binding IsUsuariosView}" Margin="12">
             <Path Data="M 0,0 L 1,0 L 1,0.925 L 0.925,1 L 0,1 Z"
                   Stretch="Fill"
                   Fill="{DynamicResource SwPanelBrush}"
@@ -274,7 +271,7 @@
             </Grid>
         </Grid>
 
-        <Grid Grid.ColumnSpan="2" IsVisible="{Binding IsFormularioClienteAberto}"
+        <Grid IsVisible="{Binding IsFormularioClienteAberto}"
               Panel.ZIndex="10">
             <Border Background="#99000000" />
             <Border Width="620" Height="720" Margin="24"
@@ -365,7 +362,7 @@
             </Border>
         </Grid>
 
-        <Grid Grid.ColumnSpan="2" IsVisible="{Binding IsConfirmacaoExclusaoClienteAberta}"
+        <Grid IsVisible="{Binding IsConfirmacaoExclusaoClienteAberta}"
               Panel.ZIndex="11">
             <Border Background="#99000000" />
             <Border Width="500" Height="260" Margin="24"
@@ -407,7 +404,7 @@
             </Border>
         </Grid>
 
-        <Grid Grid.ColumnSpan="2" IsVisible="{Binding IsConfirmacaoExclusaoAberta}"
+        <Grid IsVisible="{Binding IsConfirmacaoExclusaoAberta}"
               Panel.ZIndex="12">
             <Border Background="#99000000" />
             <Border Width="520" Height="260" Margin="24"

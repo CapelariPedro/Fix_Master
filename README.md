@@ -126,14 +126,14 @@ Cadastro de pessoas físicas e jurídicas.
 
 ## Épico EST — Estoque e localização (F02)
 
-Materiais e ferramentas com endereçamento físico A–X × 1–8.
+Materiais e ferramentas com endereçamento físico A–G × 1–8.
 
 | ID | História | Descrição / critérios | Prio. | Pts | Depende de | Ref. |
 |---|---|---|---|---|---|---|
 | EST-01 | Como operador, quero cadastrar materiais e ferramentas, para controlar o que tenho. | Formulário com código, nome, descrição, categoria, quantidade e preço unitário; código único. | Must | 3 | ARQ-09 | RF03 |
-| EST-02 | Como operador, quero que só coordenadas válidas sejam aceitas, para o sistema espelhar meu depósito. | `LocalizacaoValidator` (A–X, 1–8), `CHECK` no banco e mensagem clara. | Must | 2 | EST-01 | US04, RF04 |
+| EST-02 | Como operador, quero que só coordenadas válidas sejam aceitas, para o sistema espelhar meu depósito. | `LocalizacaoValidator` (A–G, 1–8), `CHECK` no banco e mensagem clara. | Must | 2 | EST-01 | US04, RF04 |
 | EST-03 | Como operador, quero que cada coordenada guarde um só item, para não ter dúvida de onde está cada coisa. | Índice único (Prateleira, Posicao) entre itens ativos; mensagem indicando o item que já ocupa o lugar. | Must | 2 | EST-02 | US04, 2.10.2 |
-| EST-04 | Como operador, quero ver as prateleiras em uma matriz, para enxergar o depósito. | Controle `ShelfMatrix` 24×8: livre = contorno, ocupada = preenchida; clique abre o item; lê do banco. | Must | 8 | EST-03, ARQ-10 | US04 |
+| EST-04 | Como operador, quero ver as prateleiras em uma matriz, para enxergar o depósito. | Controle `ShelfMatrix` 7×8 (A–G): livre = contorno, ocupada = preenchida; clique abre o item; lê do banco. | Must | 8 | EST-03, ARQ-10 | US04 |
 | EST-05 | Como operador, quero buscar por nome, código ou tipo, para achar a peça rápido. | Busca parcial em nome, código e categoria; mensagem quando não houver resultado. | Must | 3 | EST-01 | US05, RF03 |
 | EST-06 | Como operador, quero ver a coordenada bem grande, para ir direto à prateleira. | Resultado com a coordenada (ex.: `M4`) em fonte grande e destaque na matriz com a cor de acento. | Must | 2 | EST-04, EST-05 | US05 |
 | EST-07 | Como operador, quero atualizar, excluir ou inativar itens, para manter o estoque correto. | Edição, exclusão sem vínculos e inativação quando já usado em OS (libera a coordenada). | Must | 3 | EST-01 | RF03 |

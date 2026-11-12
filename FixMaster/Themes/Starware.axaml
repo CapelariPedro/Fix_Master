@@ -10,6 +10,7 @@
         <SolidColorBrush x:Key="SwInkBrush" Color="#1A1A1C" />
         <SolidColorBrush x:Key="SwBarBrush" Color="#1A1A1C" />
         <SolidColorBrush x:Key="SwPlaceholderBrush" Color="#6F6F73" />
+        <SolidColorBrush x:Key="SwAccentBrush" Color="#7DD3FC" />
 
         <DrawingBrush x:Key="SwGridBrush" TileMode="Tile"
                       SourceRect="0,0,24,24" DestinationRect="0,0,24,24" Opacity="0.55">
@@ -96,6 +97,15 @@
     <Style Selector="TextBox.sw-input:focus /template/ Border#PART_BorderElement">
         <Setter Property="Background" Value="#1A000000" />
         <Setter Property="BorderBrush" Value="{DynamicResource SwBarBrush}" />
+    </Style>
+
+    <Style Selector="ComboBox.sw-select">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource SwInkBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SwMidBrush}" />
+        <Setter Property="BorderThickness" Value="0,0,0,2" />
+        <Setter Property="Padding" Value="8,6" />
+        <Setter Property="Height" Value="40" />
     </Style>
 
     <Style Selector="Button.sw-accent">

@@ -109,6 +109,18 @@ public sealed class ClienteServiceTests
         var cliente = CriarPessoaFisica();
         cliente.Cep = "12345-678";
         Assert.True((await ambiente.Servico.SalvarAsync(cliente)).Sucesso);
+
+        var clienteComAcentos = new Cliente
+        {
+            Nome = "João & Irmãos Ltda.",
+            Documento = "11.222.333/0001-81",
+            Telefone = "11 98888-0000",
+            Endereco = "Rua São João, nº 10 - Centro",
+            Cep = "98765-432",
+            EhEmpresa = true
+        };
+        Assert.True((await ambiente.Servico.SalvarAsync(clienteComAcentos)).Sucesso);
+
         var empresa = new Cliente
         {
             Nome = "Empresa ABC",
@@ -124,12 +136,14 @@ public sealed class ClienteServiceTests
         var porDocumento = await ambiente.Servico.ListarAsync("529.982");
         var porCnpjAlfanumerico = await ambiente.Servico.ListarAsync("abc345");
         var porCep = await ambiente.Servico.ListarAsync("12345-678");
+        var porNomeComAcentoSemAcento = await ambiente.Servico.ListarAsync("joao");
 
         Assert.Single(porNome.Valor!);
         Assert.Single(porTelefone.Valor!);
         Assert.Single(porDocumento.Valor!);
         Assert.Single(porCnpjAlfanumerico.Valor!);
         Assert.Single(porCep.Valor!);
+        Assert.Single(porNomeComAcentoSemAcento.Valor!);
         Assert.Equal("529.982.247-25", porDocumento.Valor![0].DocumentoFormatado);
     }
 
