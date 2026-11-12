@@ -29,6 +29,7 @@ public partial class App : Application
                 options.UseSqlite($"Data Source={DbPaths.DatabaseFile}"));
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<IClienteService, ClienteService>();
+            services.AddSingleton<IEstoqueService, EstoqueService>();
             services.AddSingleton<MainViewModel>();
             _services = services.BuildServiceProvider();
 

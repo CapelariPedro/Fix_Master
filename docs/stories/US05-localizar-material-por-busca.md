@@ -5,7 +5,7 @@
 | Feature | [F02](../features/) |
 | Requisitos | RF03, RF04 |
 | Origem | Pergunta 5 da entrevista |
-| Status | A fazer |
+| Status | Implementada localmente (merge pendente) |
 
 ## História
 
@@ -15,10 +15,10 @@
 
 ## Critérios de aceite
 
-- [ ] A busca aceita termos parciais de nome, código e categoria.
-- [ ] O resultado mostra a coordenada em destaque e em tamanho grande (ex.: M4).
-- [ ] O item encontrado é destacado na matriz visual.
-- [ ] Quando nada é encontrado, uma mensagem informa isso.
+- [x] A busca aceita termos parciais de nome, código e categoria.
+- [x] O resultado mostra a coordenada em destaque e em tamanho grande (ex.: M4).
+- [x] O item encontrado é destacado na matriz visual.
+- [x] Quando nada é encontrado, uma mensagem informa isso.
 
 ## Notas técnicas
 
@@ -27,7 +27,8 @@
 
 ## Definição de pronto
 
-- [ ] Critérios de aceite atendidos
-- [ ] Testes escritos e passando
-- [ ] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
+- [x] Critérios de aceite atendidos
+- [x] Testes escritos e passando
+- [x] Interface segue o design system Starfield
+- [ ] Merge na `develop` via pull request (pendente)
 - [ ] Merge na `develop` via pull request

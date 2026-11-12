@@ -15,6 +15,7 @@ public sealed partial class ShellViewModel : ViewModelBase
 {
     private readonly IAuthService _auth;
     private readonly IClienteService _clienteService;
+    private readonly IEstoqueService _estoqueService;
     private readonly UsuarioAutenticado _usuarioLogado;
 
     [ObservableProperty]
@@ -36,10 +37,13 @@ public sealed partial class ShellViewModel : ViewModelBase
     private bool _isConfirmacaoExclusaoAberta;
 
     [ObservableProperty]
-    private bool _isClientesPanelAberto = true;
+    private bool _isClientesPanelAberto;
 
     [ObservableProperty]
     private bool _isUsuariosPanelAberto;
+
+    [ObservableProperty]
+    private bool _isEstoqueView;
 
     [ObservableProperty]
     private string _filtroClientes = "";
@@ -89,21 +93,24 @@ public sealed partial class ShellViewModel : ViewModelBase
     public ShellViewModel(
         IAuthService auth,
         IClienteService clienteService,
+        IEstoqueService estoqueService,
         UsuarioAutenticado usuarioLogado)
     {
         _auth = auth;
         _clienteService = clienteService;
+        _estoqueService = estoqueService;
         _usuarioLogado = usuarioLogado;
+        Estoque = new EstoqueViewModel(_estoqueService);
         IsAdministrador = usuarioLogado.EhAdministrador;
-        IsUsuariosPanelAberto = usuarioLogado.EhAdministrador;
     }
 
     public ObservableCollection<UsuarioResumo> Usuarios { get; } = [];
     public ObservableCollection<ClienteResumo> Clientes { get; } = [];
     public ObservableCollection<ClienteResumo> ClientesFiltrados { get; } = [];
+    public EstoqueViewModel Estoque { get; }
 
     public bool IsOperador => !IsAdministrador;
-    public bool IsUsuariosView => IsAdministrador && IsUsuariosPanelAberto;
+    public bool IsUsuariosView => IsAdministrador && IsUsuariosPanelAberto && !IsEstoqueView;
     public int ColSpanClientes => IsUsuariosView ? 1 : 2;
     public int ColunaUsuarios => IsClientesPanelAberto ? 1 : 0;
     public int ColSpanUsuarios => IsClientesPanelAberto ? 1 : 2;
@@ -128,22 +135,38 @@ public sealed partial class ShellViewModel : ViewModelBase
         await CarregarClientesAsync();
         if (IsAdministrador)
             await CarregarUsuariosAsync();
+        await Estoque.InicializarAsync();
     }
 
     [RelayCommand]
     public void MostrarInicio()
     {
-        IsClientesPanelAberto = true;
-        IsUsuariosPanelAberto = IsAdministrador;
+        IsEstoqueView = false;
+        IsClientesPanelAberto = false;
+        IsUsuariosPanelAberto = false;
     }
 
-    public void MostrarClientes() => IsClientesPanelAberto = true;
+    public void MostrarClientes()
+    {
+        IsEstoqueView = false;
+        IsUsuariosPanelAberto = false;
+        IsClientesPanelAberto = true;
+    }
+
+    public void MostrarEstoque()
+    {
+        IsClientesPanelAberto = false;
+        IsUsuariosPanelAberto = false;
+        IsEstoqueView = true;
+    }
 
     public void MostrarUsuarios()
     {
         if (!IsAdministrador)
             return;
 
+        IsEstoqueView = false;
+        IsClientesPanelAberto = false;
         IsUsuariosPanelAberto = true;
     }
 
@@ -215,6 +238,12 @@ public sealed partial class ShellViewModel : ViewModelBase
         OnPropertyChanged(nameof(ColSpanClientes));
     }
 
+    partial void OnIsEstoqueViewChanged(bool value)
+    {
+        OnPropertyChanged(nameof(IsUsuariosView));
+        OnPropertyChanged(nameof(ColSpanClientes));
+    }
+
     partial void OnIsClientesPanelAbertoChanged(bool value)
     {
         OnPropertyChanged(nameof(ColSpanClientes));
@@ -278,11 +307,11 @@ public sealed partial class ShellViewModel : ViewModelBase
         ClientesFiltrados.Clear();
         foreach (var cliente in Clientes.Where(cliente =>
                      string.IsNullOrEmpty(filtro)
-                     || cliente.Nome.Contains(filtro, StringComparison.OrdinalIgnoreCase)
-                     || cliente.Telefone.Contains(filtro, StringComparison.OrdinalIgnoreCase)
-                     || cliente.CepFormatado.Contains(filtro, StringComparison.OrdinalIgnoreCase)
-                     || cliente.Documento.Contains(filtro, StringComparison.OrdinalIgnoreCase)
-                     || cliente.DocumentoFormatado.Contains(filtro, StringComparison.OrdinalIgnoreCase)))
+                     || TextoHelper.Contem(cliente.Nome, filtro)
+                     || TextoHelper.Contem(cliente.Telefone, filtro)
+                     || TextoHelper.Contem(cliente.CepFormatado, filtro)
+                     || TextoHelper.Contem(cliente.Documento, filtro)
+                     || TextoHelper.Contem(cliente.DocumentoFormatado, filtro)))
         {
             ClientesFiltrados.Add(cliente);
         }
