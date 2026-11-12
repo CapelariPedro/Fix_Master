@@ -178,10 +178,11 @@ public sealed class ClienteService : IClienteService
             return Resultado.Ok("Cliente excluído com sucesso.");
         }
         catch (DbUpdateException exception)
-            when (exception.InnerException is SqliteException
-                  {
-                      SqliteExtendedErrorCode: 787
-                  })
+            when (exception.InnerException is SqliteException sqliteException
+                  && sqliteException.SqliteErrorCode == 19
+                  && sqliteException.Message.Contains(
+                      "FOREIGN KEY constraint failed",
+                      StringComparison.OrdinalIgnoreCase))
         {
             return await InativarClienteAsync(id);
         }

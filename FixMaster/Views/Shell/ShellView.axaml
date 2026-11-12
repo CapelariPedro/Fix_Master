@@ -3,14 +3,18 @@
              xmlns:vm="using:FixMaster.ViewModels"
              xmlns:infra="using:FixMaster.Infrastructure"
              xmlns:estoque="using:FixMaster.Views.Shell"
+             xmlns:agenda="using:FixMaster.Views.Shell"
              x:Class="FixMaster.Views.Shell.ShellView"
              x:DataType="vm:ShellViewModel">
     <Grid>
+        <Grid IsVisible="{Binding IsAgendaView}">
+            <agenda:AgendaView DataContext="{Binding Agenda}" />
+        </Grid>
         <Grid IsVisible="{Binding IsEstoqueView}">
             <estoque:EstoqueView DataContext="{Binding Estoque}" />
         </Grid>
         <Grid IsVisible="{Binding IsClientesPanelAberto}" Margin="12">
-            <Path Data="M 0,0 L 1,0 L 1,0.925 L 0.925,1 L 0,1 Z"
+            <Path Data="M 0,0 L 1,0 L 1,0.99 L 0.99,1 L 0,1 Z"
                   Stretch="Fill"
                   Fill="{DynamicResource SwPanelBrush}"
                   Stroke="{DynamicResource SwMidBrush}"
@@ -186,7 +190,7 @@
         </Grid>
 
         <Grid IsVisible="{Binding IsUsuariosView}" Margin="12">
-            <Path Data="M 0,0 L 1,0 L 1,0.925 L 0.925,1 L 0,1 Z"
+            <Path Data="M 0,0 L 1,0 L 1,0.99 L 0.99,1 L 0,1 Z"
                   Stretch="Fill"
                   Fill="{DynamicResource SwPanelBrush}"
                   Stroke="{DynamicResource SwMidBrush}"
@@ -369,7 +373,7 @@
                     HorizontalAlignment="Center" VerticalAlignment="Center"
                     BoxShadow="0 10 30 0 #55000000">
                 <Grid>
-                    <Path Data="M 0.08,0 L 1,0 L 1,1 L 0,1 L 0,0.08 Z"
+                    <Path Data="M 0.03,0 L 1,0 L 1,1 L 0,1 L 0,0.03 Z"
                           Stretch="Fill"
                           Fill="{DynamicResource SwPanelBrush}"
                           Stroke="{DynamicResource SwMidBrush}"
@@ -411,7 +415,7 @@
                     HorizontalAlignment="Center" VerticalAlignment="Center"
                     BoxShadow="0 10 30 0 #55000000">
                 <Grid>
-                    <Path Data="M 0.08,0 L 1,0 L 1,1 L 0,1 L 0,0.08 Z"
+                    <Path Data="M 0.03,0 L 1,0 L 1,1 L 0,1 L 0,0.03 Z"
                           Stretch="Fill"
                           Fill="{DynamicResource SwPanelBrush}"
                           Stroke="{DynamicResource SwMidBrush}"

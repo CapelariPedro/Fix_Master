@@ -46,7 +46,7 @@
         <Setter Property="Template">
             <ControlTemplate>
                 <Grid>
-                    <Path Data="M 0,0 L 1,0 L 1,0.9 L 0.9,1 L 0,1 Z"
+                    <Path Data="M 0,0 L 1,0 L 1,0.96 L 0.96,1 L 0,1 Z"
                           Stretch="Fill"
                           Fill="{TemplateBinding Background}"
                           IsHitTestVisible="False" />
