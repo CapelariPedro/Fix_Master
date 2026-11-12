@@ -5,7 +5,7 @@
 | Feature | [F03](../features/) |
 | Requisitos | RF05, RF06, RF07 |
 | Origem | Pergunta 7 da entrevista |
-| Status | A fazer |
+| Status | Implementada |
 
 ## História
 
@@ -15,10 +15,10 @@
 
 ## Critérios de aceite
 
-- [ ] É possível navegar entre os meses.
-- [ ] Dias com atendimentos são indicados no calendário.
-- [ ] Selecionar uma data atualiza a grade diária.
-- [ ] Os status Pendente, Em Andamento e Concluído são distinguíveis por cor e por texto (não apenas por cor).
+- [x] É possível navegar entre os meses.
+- [x] Dias com atendimentos são indicados no calendário.
+- [x] Selecionar uma data atualiza a grade diária.
+- [x] Os status Pendente, Em Andamento e Concluído são distinguíveis por cor e por texto (não apenas por cor).
 
 ## Notas técnicas
 
@@ -27,7 +27,7 @@
 
 ## Definição de pronto
 
-- [ ] Critérios de aceite atendidos
-- [ ] Testes escritos e passando
-- [ ] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
+- [x] Critérios de aceite atendidos
+- [x] Testes escritos e passando
+- [x] Interface segue o design system Starfield aplicado no projeto
 - [ ] Merge na `develop` via pull request

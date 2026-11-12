@@ -16,6 +16,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     private readonly IAuthService _auth;
     private readonly IClienteService _clienteService;
     private readonly IEstoqueService _estoqueService;
+    private readonly IAgendaService _agendaService;
     private readonly UsuarioAutenticado _usuarioLogado;
 
     [ObservableProperty]
@@ -44,6 +45,9 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isEstoqueView;
+
+    [ObservableProperty]
+    private bool _isAgendaView;
 
     [ObservableProperty]
     private string _filtroClientes = "";
@@ -94,13 +98,16 @@ public sealed partial class ShellViewModel : ViewModelBase
         IAuthService auth,
         IClienteService clienteService,
         IEstoqueService estoqueService,
+        IAgendaService agendaService,
         UsuarioAutenticado usuarioLogado)
     {
         _auth = auth;
         _clienteService = clienteService;
         _estoqueService = estoqueService;
+        _agendaService = agendaService;
         _usuarioLogado = usuarioLogado;
         Estoque = new EstoqueViewModel(_estoqueService);
+        Agenda = new AgendaViewModel(_agendaService, _clienteService);
         IsAdministrador = usuarioLogado.EhAdministrador;
     }
 
@@ -108,6 +115,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     public ObservableCollection<ClienteResumo> Clientes { get; } = [];
     public ObservableCollection<ClienteResumo> ClientesFiltrados { get; } = [];
     public EstoqueViewModel Estoque { get; }
+    public AgendaViewModel Agenda { get; }
 
     public bool IsOperador => !IsAdministrador;
     public bool IsUsuariosView => IsAdministrador && IsUsuariosPanelAberto && !IsEstoqueView;
@@ -136,12 +144,14 @@ public sealed partial class ShellViewModel : ViewModelBase
         if (IsAdministrador)
             await CarregarUsuariosAsync();
         await Estoque.InicializarAsync();
+        await Agenda.InicializarAsync();
     }
 
     [RelayCommand]
     public void MostrarInicio()
     {
         IsEstoqueView = false;
+        IsAgendaView = false;
         IsClientesPanelAberto = false;
         IsUsuariosPanelAberto = false;
     }
@@ -149,14 +159,25 @@ public sealed partial class ShellViewModel : ViewModelBase
     public void MostrarClientes()
     {
         IsEstoqueView = false;
+        IsAgendaView = false;
         IsUsuariosPanelAberto = false;
         IsClientesPanelAberto = true;
+    }
+
+    public async Task MostrarAgendaAsync()
+    {
+        IsEstoqueView = false;
+        IsClientesPanelAberto = false;
+        IsUsuariosPanelAberto = false;
+        IsAgendaView = true;
+        await Agenda.CarregarAsync();
     }
 
     public void MostrarEstoque()
     {
         IsClientesPanelAberto = false;
         IsUsuariosPanelAberto = false;
+        IsAgendaView = false;
         IsEstoqueView = true;
     }
 
@@ -166,6 +187,7 @@ public sealed partial class ShellViewModel : ViewModelBase
             return;
 
         IsEstoqueView = false;
+        IsAgendaView = false;
         IsClientesPanelAberto = false;
         IsUsuariosPanelAberto = true;
     }
@@ -177,6 +199,8 @@ public sealed partial class ShellViewModel : ViewModelBase
             await CarregarUsuariosAsync();
         if (IsClientesPanelAberto)
             await CarregarClientesAsync();
+        if (IsAgendaView)
+            await Agenda.CarregarAsync();
     }
 
     [RelayCommand]

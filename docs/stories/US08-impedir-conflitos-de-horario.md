@@ -5,7 +5,7 @@
 | Feature | [F03](../features/) |
 | Requisitos | RF07 |
 | Origem | Pergunta 8 da entrevista |
-| Status | A fazer |
+| Status | Implementada |
 
 ## História
 
@@ -15,12 +15,12 @@
 
 ## Critérios de aceite
 
-- [ ] Há conflito quando novoInício < fimExistente E novoFim > inícioExistente.
-- [ ] Somente agendamentos que bloqueiam a agenda entram na verificação (cancelados não bloqueiam).
-- [ ] Em caso de conflito, o agendamento não é gravado e o compromisso conflitante é exibido.
-- [ ] O operador pode escolher outro horário sem perder os dados já digitados.
-- [ ] Agendamentos consecutivos (término = início do próximo) são permitidos.
-- [ ] Ao editar um agendamento, ele não conflita consigo mesmo.
+- [x] Há conflito quando novoInício < fimExistente E novoFim > inícioExistente.
+- [x] Somente agendamentos que bloqueiam a agenda entram na verificação (cancelados não bloqueiam).
+- [x] Em caso de conflito, o agendamento não é gravado e o compromisso conflitante é exibido.
+- [x] O operador pode escolher outro horário sem perder os dados já digitados.
+- [x] Agendamentos consecutivos (término = início do próximo) são permitidos.
+- [x] Ao editar um agendamento, ele não conflita consigo mesmo.
 
 ## Notas técnicas
 
@@ -29,7 +29,7 @@
 
 ## Definição de pronto
 
-- [ ] Critérios de aceite atendidos
-- [ ] Testes escritos e passando
-- [ ] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
+- [x] Critérios de aceite atendidos
+- [x] Testes escritos e passando
+- [x] Interface segue o design system Starfield aplicado no projeto
 - [ ] Merge na `develop` via pull request

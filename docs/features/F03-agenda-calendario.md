@@ -52,15 +52,15 @@ public async Task<Agendamento?> BuscarConflitoAsync(DateTime inicio, int duracao
 
 ## Tarefas técnicas
 
-- [ ] Criar `Agendamento` e enum `StatusAgendamento` (Pendente, EmAndamento, Concluido, Cancelado)
-- [ ] Implementar `AgendaService` + testes (sobreposição, encostado, contido, cancelado, edição do próprio registro)
-- [ ] Criar calendário mensal (controle `Calendar` do Avalonia ou controle próprio)
-- [ ] Criar grade diária
-- [ ] Formulário com mensagem de conflito apontando o compromisso existente
+- [x] Criar `Agendamento` e enum `StatusAgendamento` (Pendente, EmAndamento, Concluido, Cancelado)
+- [x] Implementar `AgendaService` + testes (sobreposição, encostado, contido, cancelado, edição do próprio registro)
+- [x] Criar calendário mensal (controle `Calendar` do Avalonia ou controle próprio)
+- [x] Criar grade diária
+- [x] Formulário com mensagem de conflito apontando o compromisso existente
 
 ## Definição de pronto
 
-- [ ] Todas as histórias da feature concluídas
-- [ ] Regras de negócio cobertas por testes unitários
-- [ ] Funciona offline
+- [x] Todas as histórias da feature concluídas
+- [x] Regras de negócio cobertas por testes unitários
+- [x] Funciona offline
 - [ ] Atividade relevante registrada no feed

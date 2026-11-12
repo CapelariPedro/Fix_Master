@@ -1,0 +1,379 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FixMaster.ViewModels"
+             xmlns:infra="using:FixMaster.Infrastructure"
+             x:Class="FixMaster.Views.Shell.AgendaView"
+             x:DataType="vm:AgendaViewModel">
+    <Grid Margin="12">
+        <Path Data="M 0,0 L 1,0 L 1,0.97 L 0.97,1 L 0,1 Z"
+              Stretch="Fill"
+              Fill="{DynamicResource SwPanelBrush}"
+              Stroke="{DynamicResource SwMidBrush}"
+              StrokeThickness="2"
+              IsHitTestVisible="False" />
+        <Grid RowDefinitions="Auto,*" Margin="26,20,20,18">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                <StackPanel Spacing="3">
+                    <TextBlock Text="AGENDA"
+                               FontSize="23" FontWeight="SemiBold"
+                               LetterSpacing="3"
+                               Foreground="{DynamicResource SwInkBrush}" />
+                    <TextBlock Text="Calendário mensal e atendimentos do dia."
+                               FontSize="12"
+                               Foreground="{DynamicResource SwMidBrush}" />
+                </StackPanel>
+                <Button Grid.Column="1" Content="ATUALIZAR"
+                        Command="{Binding CarregarCommand}"
+                        VerticalAlignment="Center"
+                        Padding="12,7" />
+                <Button Grid.Column="2" Content="NOVO ATENDIMENTO"
+                        Classes="sw-accent"
+                        Command="{Binding NovoAgendamentoCommand}"
+                        VerticalAlignment="Center"
+                        Padding="14,8" />
+            </Grid>
+
+            <Grid Grid.Row="1" ColumnDefinitions="310,*"
+                  ColumnSpacing="20" Margin="0,18,0,0">
+                <Border Background="#1AFFFFFF"
+                        BorderBrush="{DynamicResource SwLineBrush}"
+                        BorderThickness="1"
+                        Padding="14">
+                    <Grid RowDefinitions="Auto,Auto,Auto,*">
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <Button Content="‹"
+                                    Command="{Binding MesAnteriorCommand}"
+                                    Padding="9,4"
+                                    MinWidth="34" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding TituloMes}"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="14" FontWeight="SemiBold"
+                                       LetterSpacing="1"
+                                       Foreground="{DynamicResource SwInkBrush}" />
+                            <Button Grid.Column="2" Content="›"
+                                    Command="{Binding ProximoMesCommand}"
+                                    Padding="9,4"
+                                    MinWidth="34" />
+                        </Grid>
+
+                        <Grid Grid.Row="1" ColumnDefinitions="*,*,*,*,*,*,*"
+                              Margin="0,14,0,6">
+                            <TextBlock Text="SEG" Classes="sw-label" HorizontalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="TER" Classes="sw-label" HorizontalAlignment="Center" />
+                            <TextBlock Grid.Column="2" Text="QUA" Classes="sw-label" HorizontalAlignment="Center" />
+                            <TextBlock Grid.Column="3" Text="QUI" Classes="sw-label" HorizontalAlignment="Center" />
+                            <TextBlock Grid.Column="4" Text="SEX" Classes="sw-label" HorizontalAlignment="Center" />
+                            <TextBlock Grid.Column="5" Text="SÁB" Classes="sw-label" HorizontalAlignment="Center" />
+                            <TextBlock Grid.Column="6" Text="DOM" Classes="sw-label" HorizontalAlignment="Center" />
+                        </Grid>
+
+                        <ItemsControl Grid.Row="2" ItemsSource="{Binding DiasDoMes}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="7" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="infra:DiaCalendario">
+                                    <Button Command="{Binding $parent[UserControl].DataContext.SelecionarDiaCommand}"
+                                            CommandParameter="{Binding .}"
+                                            Padding="3"
+                                            Margin="1"
+                                            MinHeight="36">
+                                        <Grid RowDefinitions="*,Auto">
+                                            <TextBlock Text="{Binding Numero}"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{DynamicResource SwInkBrush}"
+                                                       Opacity="{Binding Opacidade}" />
+                                            <TextBlock Grid.Row="1" Text="●"
+                                                       FontSize="7"
+                                                       HorizontalAlignment="Center"
+                                                       Foreground="#15803D"
+                                                       IsVisible="{Binding TemAgendamentos}" />
+                                            <Border BorderBrush="{DynamicResource SwAccentBrush}"
+                                                    BorderThickness="2"
+                                                    IsHitTestVisible="False"
+                                                    IsVisible="{Binding Selecionado}" />
+                                        </Grid>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <StackPanel Grid.Row="3" Spacing="10" Margin="2,16,2,0">
+                            <TextBlock Text="{Binding DataSelecionadaDescricao}"
+                                       FontSize="13" FontWeight="SemiBold"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SwInkBrush}" />
+                            <TextBlock Text="● Dia com atendimentos"
+                                       FontSize="11"
+                                       Foreground="#15803D" />
+                            <TextBlock Text="{Binding MensagemErro}"
+                                       IsVisible="{Binding MensagemErro, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       TextWrapping="Wrap"
+                                       Foreground="#B91C1C" />
+                            <TextBlock Text="Carregando agenda..."
+                                       IsVisible="{Binding IsCarregando}"
+                                       Foreground="{DynamicResource SwMidBrush}" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="1"
+                        Background="#1AFFFFFF"
+                        BorderBrush="{DynamicResource SwLineBrush}"
+                        BorderThickness="1"
+                        Padding="14">
+                    <Grid RowDefinitions="Auto,*">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="GRADE DIÁRIA"
+                                           Classes="sw-label" />
+                                <TextBlock Text="Atendimentos em ordem de horário"
+                                           FontSize="12"
+                                           Foreground="{DynamicResource SwMidBrush}" />
+                            </StackPanel>
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding Agendamentos.Count, StringFormat='{}{0} atendimentos'}"
+                                       VerticalAlignment="Center"
+                                       Foreground="{DynamicResource SwInkBrush}" />
+                        </Grid>
+
+                        <ScrollViewer Grid.Row="1"
+                                      Margin="0,12,0,0"
+                                      VerticalScrollBarVisibility="Auto">
+                            <StackPanel Spacing="14">
+                                <ItemsControl ItemsSource="{Binding Horarios}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="infra:HorarioAgenda">
+                                        <Grid ColumnDefinitions="70,*" Margin="0,0,0,6">
+                                            <TextBlock Text="{Binding Hora}"
+                                                       VerticalAlignment="Top"
+                                                       Margin="0,10,8,0"
+                                                       FontSize="12"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource SwMidBrush}" />
+                                            <Border Grid.Column="1"
+                                                    Padding="10,8"
+                                                    BorderThickness="1"
+                                                    BorderBrush="#22A447"
+                                                    Background="#DDF3E3"
+                                                    IsVisible="{Binding Livre}">
+                                                <StackPanel Spacing="6">
+                                                    <TextBlock Text="LIVRE"
+                                                               FontSize="10"
+                                                               FontWeight="SemiBold"
+                                                               LetterSpacing="1"
+                                                               Foreground="#166534" />
+                                                    <ItemsControl ItemsSource="{Binding Agendamentos}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate x:DataType="infra:AgendamentoResumo">
+                                                                <Grid>
+                                                                    <Path Data="M 0,0 L 1,0 L 1,0.97 L 0.97,1 L 0,1 Z"
+                                                                          Stretch="Fill"
+                                                                          Fill="{DynamicResource SwPanelBrush}"
+                                                                          Stroke="{DynamicResource SwMidBrush}"
+                                                                          StrokeThickness="1"
+                                                                          IsHitTestVisible="False" />
+                                                                    <Grid ColumnDefinitions="*,Auto" Margin="10">
+                                                                        <StackPanel Spacing="4">
+                                                                            <TextBlock Text="{Binding Horario}"
+                                                                                       FontSize="13"
+                                                                                       FontWeight="Bold"
+                                                                                       Foreground="{DynamicResource SwInkBrush}" />
+                                                                            <TextBlock Text="{Binding ClienteNome}"
+                                                                                       FontSize="13"
+                                                                                       FontWeight="SemiBold"
+                                                                                       Foreground="{DynamicResource SwInkBrush}" />
+                                                                            <TextBlock Text="{Binding DescricaoServico}"
+                                                                                       FontSize="12"
+                                                                                       TextWrapping="Wrap"
+                                                                                       Foreground="{DynamicResource SwMidBrush}" />
+                                                                            <TextBlock Text="{Binding StatusDescricao}"
+                                                                                       IsVisible="{Binding IsCancelado}"
+                                                                                       FontSize="10" FontWeight="Bold"
+                                                                                       Foreground="{DynamicResource SwMidBrush}" />
+                                                                        </StackPanel>
+                                                                    </Grid>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </StackPanel>
+                                            </Border>
+                                            <Border Grid.Column="1"
+                                                    Padding="10,8"
+                                                    BorderThickness="1"
+                                                    BorderBrush="#B45309"
+                                                    Background="#18F59E0B"
+                                                    IsVisible="{Binding Ocupado}">
+                                                <StackPanel Spacing="6">
+                                                    <TextBlock Text="{Binding TextoDisponibilidade}"
+                                                               FontSize="10"
+                                                               FontWeight="SemiBold"
+                                                               LetterSpacing="1"
+                                                               Foreground="#92400E"
+                                                               />
+                                                    <TextBlock Text="{Binding TextoOcupacao}"
+                                                               FontSize="11"
+                                                               Foreground="#92400E"
+                                                               IsVisible="{Binding TemTextoOcupacao}" />
+                                                    <ItemsControl ItemsSource="{Binding Agendamentos}">
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate x:DataType="infra:AgendamentoResumo">
+                                                                <Grid>
+                                                                    <Path Data="M 0,0 L 1,0 L 1,0.97 L 0.97,1 L 0,1 Z"
+                                                                          Stretch="Fill"
+                                                                          Fill="{DynamicResource SwPanelBrush}"
+                                                                          Stroke="{DynamicResource SwMidBrush}"
+                                                                          StrokeThickness="1"
+                                                                          IsHitTestVisible="False" />
+                                                                    <Grid ColumnDefinitions="*,Auto" Margin="10">
+                                                                        <StackPanel Spacing="4">
+                                                                            <TextBlock Text="{Binding Horario}"
+                                                                                       FontSize="13"
+                                                                                       FontWeight="Bold"
+                                                                                       Foreground="{DynamicResource SwInkBrush}" />
+                                                                            <TextBlock Text="{Binding ClienteNome}"
+                                                                                       FontSize="13"
+                                                                                       FontWeight="SemiBold"
+                                                                                       Foreground="{DynamicResource SwInkBrush}" />
+                                                                            <TextBlock Text="{Binding DescricaoServico}"
+                                                                                       FontSize="12"
+                                                                                       TextWrapping="Wrap"
+                                                                                       Foreground="{DynamicResource SwMidBrush}" />
+                                                                            <TextBlock Text="{Binding StatusDescricao}"
+                                                                                       IsVisible="{Binding IsPendente}"
+                                                                                       FontSize="10" FontWeight="Bold"
+                                                                                       Foreground="#A16207" />
+                                                                            <TextBlock Text="{Binding StatusDescricao}"
+                                                                                       IsVisible="{Binding IsEmAndamento}"
+                                                                                       FontSize="10" FontWeight="Bold"
+                                                                                       Foreground="#0369A1" />
+                                                                            <TextBlock Text="{Binding StatusDescricao}"
+                                                                                       IsVisible="{Binding IsConcluido}"
+                                                                                       FontSize="10" FontWeight="Bold"
+                                                                                       Foreground="#15803D" />
+                                                                            <TextBlock Text="{Binding StatusDescricao}"
+                                                                                       IsVisible="{Binding IsCancelado}"
+                                                                                       FontSize="10" FontWeight="Bold"
+                                                                                       Foreground="{DynamicResource SwMidBrush}" />
+                                                                        </StackPanel>
+                                                                        <StackPanel Grid.Column="1"
+                                                                                    Spacing="5"
+                                                                                    VerticalAlignment="Center">
+                                                                            <Button Content="EDITAR"
+                                                                                    Command="{Binding $parent[UserControl].DataContext.EditarAgendamentoCommand}"
+                                                                                    CommandParameter="{Binding .}"
+                                                                                    IsVisible="{Binding IsEditavel}" />
+                                                                            <Button Content="INICIAR"
+                                                                                    Command="{Binding $parent[UserControl].DataContext.IniciarCommand}"
+                                                                                    CommandParameter="{Binding .}"
+                                                                                    IsVisible="{Binding IsPendente}" />
+                                                                            <Button Content="CONCLUIR"
+                                                                                    Command="{Binding $parent[UserControl].DataContext.ConcluirCommand}"
+                                                                                    CommandParameter="{Binding .}"
+                                                                                    IsVisible="{Binding IsEmAndamento}" />
+                                                                            <Button Content="CANCELAR"
+                                                                                    Command="{Binding $parent[UserControl].DataContext.CancelarCommand}"
+                                                                                    CommandParameter="{Binding .}"
+                                                                                    IsVisible="{Binding IsPendente}" />
+                                                                            <Button Content="CANCELAR"
+                                                                                    Command="{Binding $parent[UserControl].DataContext.CancelarCommand}"
+                                                                                    CommandParameter="{Binding .}"
+                                                                                    IsVisible="{Binding IsEmAndamento}" />
+                                                                        </StackPanel>
+                                                                    </Grid>
+                                                                </Grid>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <Grid IsVisible="{Binding IsFormularioAberto}" Panel.ZIndex="20">
+            <Border Background="#99000000" />
+            <Border Width="540" MaxHeight="680" Margin="20"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    BoxShadow="0 10 30 0 #55000000">
+                <Grid>
+                    <Path Data="M 0.03,0 L 1,0 L 1,1 L 0,1 L 0,0.03 Z"
+                          Stretch="Fill"
+                          Fill="{DynamicResource SwPanelBrush}"
+                          Stroke="{DynamicResource SwMidBrush}"
+                          StrokeThickness="2"
+                          IsHitTestVisible="False" />
+                    <ScrollViewer>
+                        <StackPanel Margin="28" Spacing="12">
+                            <TextBlock Text="{Binding TituloFormulario}"
+                                       FontSize="16" FontWeight="SemiBold"
+                                       LetterSpacing="2"
+                                       Foreground="{DynamicResource SwInkBrush}" />
+                            <TextBlock Text="CLIENTE" Classes="sw-label" />
+                            <ComboBox ItemsSource="{Binding Clientes}"
+                                      SelectedItem="{Binding ClienteSelecionado}"
+                                      Classes="sw-select">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="infra:ClienteResumo">
+                                        <TextBlock Text="{Binding Nome}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <TextBlock Text="DESCRIÇÃO DO SERVIÇO" Classes="sw-label" />
+                            <TextBox Classes="sw-input"
+                                     Text="{Binding DescricaoFormulario, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="500"
+                                     PlaceholderText="Ex.: diagnóstico e reparo" />
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="14">
+                                <StackPanel Spacing="6">
+                                    <TextBlock Text="DATA (DD/MM/AAAA)" Classes="sw-label" />
+                                    <TextBox Classes="sw-input"
+                                             Text="{Binding DataFormulario, UpdateSourceTrigger=PropertyChanged}"
+                                             PlaceholderText="dd/mm/aaaa" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Spacing="6">
+                                    <TextBlock Text="INÍCIO (HH:MM)" Classes="sw-label" />
+                                    <TextBox Classes="sw-input"
+                                             Text="{Binding HoraInicioFormulario, UpdateSourceTrigger=PropertyChanged}"
+                                             PlaceholderText="09:00" />
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Text="DURAÇÃO (MINUTOS)" Classes="sw-label" />
+                            <TextBox Classes="sw-input"
+                                     Text="{Binding DuracaoFormulario, UpdateSourceTrigger=PropertyChanged}"
+                                     PlaceholderText="60" />
+                            <TextBlock Text="{Binding MensagemErro}"
+                                       IsVisible="{Binding MensagemErro, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                       TextWrapping="Wrap"
+                                       Foreground="#B91C1C" />
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
+                                <Button Content="VOLTAR"
+                                        Command="{Binding FecharFormularioCommand}"
+                                        MinHeight="42" />
+                                <Button Grid.Column="1"
+                                        Content="SALVAR"
+                                        Classes="sw-accent"
+                                        Command="{Binding SalvarCommand}"
+                                        MinHeight="42" />
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

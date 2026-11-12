@@ -11,6 +11,7 @@ public sealed partial class MainViewModel : ViewModelBase
     private readonly IAuthService _auth;
     private readonly IClienteService _clienteService;
     private readonly IEstoqueService _estoqueService;
+    private readonly IAgendaService _agendaService;
     private object _currentScreen;
     private bool _isAdministrador;
     private bool _isPainelAutenticado;
@@ -22,11 +23,13 @@ public sealed partial class MainViewModel : ViewModelBase
     public MainViewModel(
         IAuthService auth,
         IClienteService clienteService,
-        IEstoqueService estoqueService)
+        IEstoqueService estoqueService,
+        IAgendaService agendaService)
     {
         _auth = auth;
         _clienteService = clienteService;
         _estoqueService = estoqueService;
+        _agendaService = agendaService;
         _currentScreen = _auth.ExisteUsuario()
             ? CriarTelaLogin()
             : new PrimeiroAcessoViewModel(
@@ -99,6 +102,13 @@ public sealed partial class MainViewModel : ViewModelBase
         (CurrentScreen as ShellViewModel)?.MostrarEstoque();
 
     [RelayCommand]
+    private async Task AbrirAgendaAsync()
+    {
+        if (CurrentScreen is ShellViewModel shell)
+            await shell.MostrarAgendaAsync();
+    }
+
+    [RelayCommand]
     private void AbrirUsuarios()
     {
         if (IsAdministrador)
@@ -110,7 +120,8 @@ public sealed partial class MainViewModel : ViewModelBase
         IsAdministrador = usuario.EhAdministrador;
         UsuarioLogadoNome = usuario.Username;
         PerfilLogado = usuario.EhAdministrador ? "ADMINISTRADOR" : "OPERADOR";
-        var shell = new ShellViewModel(_auth, _clienteService, _estoqueService, usuario);
+        var shell = new ShellViewModel(
+            _auth, _clienteService, _estoqueService, _agendaService, usuario);
         await shell.InicializarAsync();
         CurrentScreen = shell;
         IsPainelAutenticado = true;

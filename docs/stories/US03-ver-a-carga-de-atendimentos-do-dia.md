@@ -5,7 +5,7 @@
 | Feature | [F03](../features/) |
 | Requisitos | RF06, RF07 |
 | Origem | Pergunta 3 da entrevista |
-| Status | A fazer |
+| Status | Implementada |
 
 ## História
 
@@ -15,10 +15,10 @@
 
 ## Critérios de aceite
 
-- [ ] A grade diária lista os compromissos do dia selecionado ordenados por horário.
-- [ ] Cada compromisso mostra início–término, cliente, descrição do serviço e status.
-- [ ] A grade comporta pelo menos 8 compromissos no mesmo dia com boa legibilidade.
-- [ ] Horários livres são visualmente distintos dos ocupados.
+- [x] A grade diária lista os compromissos do dia selecionado ordenados por horário.
+- [x] Cada compromisso mostra início–término, cliente, descrição do serviço e status.
+- [x] A grade comporta pelo menos 8 compromissos no mesmo dia com boa legibilidade.
+- [x] Horários livres são visualmente distintos dos ocupados.
 
 ## Notas técnicas
 
@@ -27,7 +27,7 @@
 
 ## Definição de pronto
 
-- [ ] Critérios de aceite atendidos
-- [ ] Testes escritos e passando
-- [ ] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
+- [x] Critérios de aceite atendidos
+- [x] Testes escritos e passando
+- [x] Interface segue o design system Starfield aplicado no projeto
 - [ ] Merge na `develop` via pull request
