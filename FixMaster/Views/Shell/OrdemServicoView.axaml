@@ -1,0 +1,330 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FixMaster.ViewModels"
+             xmlns:models="using:FixMaster.Models"
+             xmlns:infra="using:FixMaster.Infrastructure"
+             x:Class="FixMaster.Views.Shell.OrdemServicoView"
+             x:DataType="vm:OrdemServicoViewModel">
+    <Grid Margin="12" RowDefinitions="Auto,*" RowSpacing="12">
+        <Border Background="{DynamicResource SwPanelBrush}"
+                BorderBrush="{DynamicResource SwLineBrush}"
+                BorderThickness="1"
+                Padding="20">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="ORDENS DE SERVIÇO"
+                               FontSize="22" FontWeight="SemiBold" LetterSpacing="2"
+                               Foreground="{DynamicResource SwInkBrush}" />
+                    <TextBlock Text="Serviços, custos e consumo de materiais"
+                               FontSize="12"
+                               Foreground="{DynamicResource SwMidBrush}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                    <Button Content="NOVA OS"
+                            Classes="sw-accent"
+                            Command="{Binding NovaCommand}"
+                            Padding="16,8" />
+                    <Button Content="ATUALIZAR"
+                            Command="{Binding CarregarCommand}"
+                            Padding="16,8" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" ColumnDefinitions="0.9*,1.1*" ColumnSpacing="16">
+            <Border Background="#1AFFFFFF"
+                    BorderBrush="{DynamicResource SwLineBrush}"
+                    BorderThickness="1"
+                    Padding="14">
+                <Grid RowDefinitions="Auto,*" RowSpacing="10">
+                    <TextBlock Text="ORDENS REGISTRADAS" Classes="sw-label" />
+                    <TextBlock Grid.Row="1"
+                               IsVisible="{Binding !TemOrdens}"
+                               Text="Nenhuma ordem de serviço cadastrada."
+                               Foreground="{DynamicResource SwMidBrush}" />
+                    <ScrollViewer Grid.Row="1"
+                                  IsVisible="{Binding TemOrdens}"
+                                  VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding Ordens}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="models:OrdemServico">
+                                    <Button Margin="0,0,0,8"
+                                            Padding="12"
+                                            HorizontalContentAlignment="Stretch"
+                                            Command="{Binding $parent[UserControl].DataContext.SelecionarCommand}"
+                                            CommandParameter="{Binding .}">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <StackPanel Spacing="4">
+                                                <TextBlock Text="{Binding Id, StringFormat='OS #{0}'}"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource SwInkBrush}" />
+                                                <TextBlock Text="{Binding Agendamento.Cliente.Nome}"
+                                                           Foreground="{DynamicResource SwMidBrush}"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="{Binding Agendamento.DescricaoServico}"
+                                                           FontSize="11"
+                                                           Foreground="{DynamicResource SwMidBrush}"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="{Binding DataEmissao, StringFormat='Emitida em {0:dd/MM/yyyy HH:mm}'}"
+                                                           FontSize="10"
+                                                           Foreground="{DynamicResource SwMidBrush}" />
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding Status}"
+                                                       VerticalAlignment="Center"
+                                                       FontSize="11"
+                                                       FontWeight="Bold"
+                                                       Foreground="{DynamicResource SwInkBrush}" />
+                                        </Grid>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1"
+                    Background="{DynamicResource SwPanelBrush}"
+                    BorderBrush="{DynamicResource SwLineBrush}"
+                    BorderThickness="1"
+                    Padding="18">
+                <Grid>
+                    <ScrollViewer IsVisible="{Binding TemSelecionada}"
+                                  VerticalScrollBarVisibility="Auto">
+                      <StackPanel Spacing="10">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="DETALHES DA ORDEM" Classes="sw-label" />
+                            <Button Grid.Column="1"
+                                    Content="EDITAR"
+                                    Command="{Binding EditarCommand}"
+                                    IsEnabled="{Binding PodeEditar}"
+                                    Padding="12,6" />
+                        </Grid>
+                        <TextBlock Text="{Binding Selecionada.Id, StringFormat='ORDEM #{0}'}"
+                                   FontSize="20"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SwInkBrush}" />
+                        <TextBlock Text="{Binding Selecionada.Agendamento.Cliente.Nome}"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SwInkBrush}" />
+                        <TextBlock Text="{Binding Selecionada.Agendamento.DescricaoServico}"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource SwMidBrush}" />
+                        <TextBlock Text="{Binding Selecionada.Agendamento.DataHoraInicio, StringFormat='Agendado para {0:dd/MM/yyyy HH:mm}'}"
+                                   Foreground="{DynamicResource SwMidBrush}" />
+                        <TextBlock Text="RELATÓRIO TÉCNICO" Classes="sw-label" />
+                        <TextBlock Text="{Binding Selecionada.RelatorioTecnico}"
+                                   TextWrapping="Wrap"
+                                   MinHeight="52"
+                                   Foreground="{DynamicResource SwInkBrush}" />
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="MÃO DE OBRA" Classes="sw-label" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding Selecionada.MaoDeObra, StringFormat='{}{0:C2}'}"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource SwInkBrush}" />
+                        </Grid>
+                        <TextBlock Text="MATERIAIS" Classes="sw-label" />
+                        <ItemsControl ItemsSource="{Binding Selecionada.Itens}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="models:ItemOS">
+                                    <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="12"
+                                          Margin="0,0,0,4">
+                                        <TextBlock Text="{Binding ItemEstoque.Nome}"
+                                                   Foreground="{DynamicResource SwInkBrush}"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding QuantidadeUtilizada, StringFormat='x {0}'}"
+                                                   Foreground="{DynamicResource SwMidBrush}" />
+                                        <TextBlock Grid.Column="2"
+                                                   Text="{Binding ValorUnitario, StringFormat='{}{0:C2}'}"
+                                                   Foreground="{DynamicResource SwInkBrush}" />
+                                        <TextBlock Grid.Column="3"
+                                                   Text="{Binding Subtotal, StringFormat='{}{0:C2}'}"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{DynamicResource SwInkBrush}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Text="{Binding TotalSelecionado, StringFormat='TOTAL  {0:C2}'}"
+                                   FontSize="20"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource SwInkBrush}" />
+                        <TextBlock Text="{Binding Selecionada.Status}"
+                                   FontSize="11"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource SwMidBrush}" />
+                        <TextBlock Text="{Binding Mensagem}"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource SwMidBrush}" />
+                        <Button Content="CONCLUIR OS"
+                                Classes="sw-accent"
+                                Command="{Binding SolicitarConclusaoCommand}"
+                                IsEnabled="{Binding PodeConcluir}"
+                                Padding="16,12" />
+                        <Border IsVisible="{Binding IsConfirmacaoAberta}"
+                                Background="#18000000"
+                                BorderBrush="{DynamicResource SwLineBrush}"
+                                BorderThickness="1"
+                                Padding="12">
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="CONFIRMAR CONCLUSÃO" Classes="sw-label" />
+                                <TextBlock Text="O estoque será baixado e o agendamento marcado como concluído."
+                                           TextWrapping="Wrap"
+                                           Foreground="{DynamicResource SwInkBrush}" />
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button Content="CONFIRMAR"
+                                            Classes="sw-accent"
+                                            Command="{Binding ConfirmarConclusaoCommand}" />
+                                    <Button Content="CANCELAR"
+                                            Command="{Binding CancelarConclusaoCommand}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                      </StackPanel>
+                    </ScrollViewer>
+
+                    <TextBlock IsVisible="{Binding !TemSelecionada}"
+                               Text="Selecione uma ordem ou crie uma nova para visualizar os detalhes."
+                               TextWrapping="Wrap"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               Foreground="{DynamicResource SwMidBrush}" />
+
+                    <Border IsVisible="{Binding IsFormularioAberto}"
+                            Background="{DynamicResource SwPanelBrush}"
+                            BorderBrush="{DynamicResource SwLineBrush}"
+                            BorderThickness="1"
+                            Padding="14">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="NOVA ORDEM DE SERVIÇO"
+                                           IsVisible="{Binding !IsEditando}"
+                                           Classes="sw-label" />
+                                <TextBlock Text="EDITAR ORDEM DE SERVIÇO"
+                                           IsVisible="{Binding IsEditando}"
+                                           Classes="sw-label" />
+                                <TextBlock Text="AGENDAMENTO" Classes="sw-label" />
+                                <ComboBox Height="40"
+                                          HorizontalAlignment="Stretch"
+                                          HorizontalContentAlignment="Stretch"
+                                          ItemsSource="{Binding AgendamentosDisponiveis}"
+                                          SelectedItem="{Binding AgendamentoSelecionado}"
+                                          IsEnabled="{Binding !IsEditando}"
+                                          IsVisible="{Binding TemAgendamentosDisponiveis}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="infra:AgendamentoResumo">
+                                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                                <TextBlock Text="{Binding ClienteNome}"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding DataHoraInicio, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}"
+                                                           FontSize="11"
+                                                           VerticalAlignment="Center"
+                                                           Foreground="{DynamicResource SwMidBrush}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <TextBlock Text="Não há agendamentos disponíveis sem ordem de serviço."
+                                           IsVisible="{Binding !TemAgendamentosDisponiveis}"
+                                           TextWrapping="Wrap"
+                                           Foreground="{DynamicResource SwMidBrush}" />
+
+                                <TextBlock Text="RELATÓRIO TÉCNICO" Classes="sw-label" />
+                                <TextBox Classes="sw-input"
+                                         Text="{Binding RelatorioTecnico, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="Descreva o diagnóstico e o serviço realizado"
+                                         AcceptsReturn="True"
+                                         MinHeight="75"
+                                         MaxLength="5000"
+                                         TextWrapping="Wrap" />
+                                <TextBlock Text="MÃO DE OBRA (R$)" Classes="sw-label" />
+                                <TextBox Classes="sw-input"
+                                         Text="{Binding MaoDeObraTexto, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="0,00" />
+
+                                <TextBlock Text="ADICIONAR MATERIAIS" Classes="sw-label" />
+                                <TextBox Classes="sw-input"
+                                         Text="{Binding FiltroMaterial, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="Buscar por nome, código ou categoria" />
+                                <Button Content="BUSCAR MATERIAIS"
+                                        Command="{Binding BuscarMateriaisCommand}"
+                                        HorizontalAlignment="Left"
+                                        Padding="12,6" />
+                                <ComboBox Height="40"
+                                          HorizontalAlignment="Stretch"
+                                          HorizontalContentAlignment="Stretch"
+                                          ItemsSource="{Binding MateriaisDisponiveis}"
+                                          SelectedItem="{Binding MaterialSelecionado}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:ItemEstoque">
+                                            <TextBlock Text="{Binding Nome}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                    <TextBlock Text="{Binding MaterialSelecionado.PrecoUnitario, StringFormat='Valor unitário: {0:C2}'}"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource SwMidBrush}" />
+                                    <TextBox Grid.Column="1"
+                                             Width="90"
+                                             Classes="sw-input"
+                                             Text="{Binding QuantidadeMaterialTexto, UpdateSourceTrigger=PropertyChanged}"
+                                             PlaceholderText="Qtd." />
+                                    <Button Grid.Column="2"
+                                            Content="ADICIONAR"
+                                            Command="{Binding AdicionarMaterialCommand}"
+                                            Padding="12,6" />
+                                </Grid>
+                                <ItemsControl ItemsSource="{Binding ItensFormulario}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="models:ItemOS">
+                                            <Grid ColumnDefinitions="*,Auto,Auto,Auto"
+                                                  ColumnSpacing="8"
+                                                  Margin="0,0,0,4">
+                                                <TextBlock Text="{Binding ItemEstoque.Nome}"
+                                                           VerticalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding QuantidadeUtilizada, StringFormat='x {0}'}"
+                                                           VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="2"
+                                                           Text="{Binding ValorUnitario, StringFormat='{}{0:C2}'}"
+                                                           VerticalAlignment="Center" />
+                                                <Button Grid.Column="3"
+                                                        Content="REMOVER"
+                                                        Command="{Binding $parent[UserControl].DataContext.RemoverMaterialCommand}"
+                                                        CommandParameter="{Binding .}"
+                                                        Padding="8,4" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <TextBlock Text="{Binding TotalFormulario, StringFormat='TOTAL  {0:C2}'}"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Foreground="{DynamicResource SwInkBrush}" />
+                                <TextBlock Text="{Binding Mensagem}"
+                                           TextWrapping="Wrap"
+                                           Foreground="{DynamicResource SwMidBrush}" />
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button Content="SALVAR OS"
+                                            Classes="sw-accent"
+                                            Command="{Binding SalvarCommand}"
+                                            IsEnabled="{Binding PodeSalvar}"
+                                            MinWidth="120" />
+                                    <Button Content="CANCELAR"
+                                            Command="{Binding CancelarFormularioCommand}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

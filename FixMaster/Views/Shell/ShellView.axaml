@@ -4,11 +4,15 @@
              xmlns:infra="using:FixMaster.Infrastructure"
              xmlns:estoque="using:FixMaster.Views.Shell"
              xmlns:agenda="using:FixMaster.Views.Shell"
+             xmlns:ordem="using:FixMaster.Views.Shell"
              x:Class="FixMaster.Views.Shell.ShellView"
              x:DataType="vm:ShellViewModel">
     <Grid>
         <Grid IsVisible="{Binding IsAgendaView}">
             <agenda:AgendaView DataContext="{Binding Agenda}" />
+        </Grid>
+        <Grid IsVisible="{Binding IsOrdensServicoView}">
+            <ordem:OrdemServicoView DataContext="{Binding OrdensServico}" />
         </Grid>
         <Grid IsVisible="{Binding IsEstoqueView}">
             <estoque:EstoqueView DataContext="{Binding Estoque}" />

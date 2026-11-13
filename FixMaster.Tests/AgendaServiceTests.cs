@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FixMaster.Data;
 using FixMaster.Models;
 using FixMaster.Services;
+using FixMaster.ViewModels;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
@@ -177,6 +178,28 @@ public sealed class AgendaServiceTests
         Assert.Equal(
             Enumerable.Range(8, 8).Select(hora => DiaTeste.AddHours(hora)),
             lista.Valor.Select(item => item.DataHoraInicio));
+    }
+
+    [Fact]
+    public async Task AgendaViewModel_RecebeDuracaoEmHorasEConverteParaPersistencia()
+    {
+        await using var ambiente = await AmbienteTeste.CriarAsync();
+        await ambiente.CriarClienteAsync();
+        var viewModel = new AgendaViewModel(ambiente.Servico, ambiente.Clientes);
+        await viewModel.CarregarAsync();
+
+        viewModel.NovoAgendamentoCommand.Execute(null);
+        Assert.Equal("1", viewModel.DuracaoFormulario);
+        viewModel.DuracaoFormulario = "2";
+        viewModel.DescricaoFormulario = "Revisão em duas horas";
+
+        await viewModel.SalvarCommand.ExecuteAsync(null);
+
+        Assert.Null(viewModel.MensagemErro);
+        var lista = await ambiente.Servico.ListarDiaAsync(viewModel.DataSelecionada);
+        var agendamento = Assert.Single(lista.Valor!);
+        Assert.Equal(120, agendamento.DuracaoMinutos);
+        Assert.Equal(viewModel.DataSelecionada.Date.AddHours(11), agendamento.DataHoraFim);
     }
 
     [Fact]

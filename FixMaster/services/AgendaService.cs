@@ -38,7 +38,8 @@ public sealed class AgendaService : IAgendaService
                     agendamento.DataHoraFim,
                     agendamento.DuracaoMinutos,
                     agendamento.DescricaoServico,
-                    agendamento.Status))
+                    agendamento.Status,
+                    db.OrdensServico.Any(ordem => ordem.AgendamentoId == agendamento.Id)))
                 .ToListAsync();
 
             return Resultado<IReadOnlyList<AgendamentoResumo>>.Ok(agendamentos);
@@ -93,6 +94,14 @@ public sealed class AgendaService : IAgendaService
                 cliente.Id == agendamento.ClienteId && cliente.Ativo);
             if (!clienteExiste)
                 return Resultado.Falha("Selecione um cliente ativo para o atendimento.");
+
+            if (agendamento.Id != 0
+                && await db.OrdensServico.AnyAsync(ordem =>
+                    ordem.AgendamentoId == agendamento.Id))
+            {
+                return Resultado.Falha(
+                    "Este agendamento já possui uma OS e não pode ser editado.");
+            }
 
             var conflito = await BuscarConflitoAsync(
                 db,
@@ -155,6 +164,20 @@ public sealed class AgendaService : IAgendaService
                 .FirstOrDefaultAsync(item => item.Id == id);
             if (agendamento is null)
                 return Resultado.Falha("O agendamento selecionado não foi encontrado.");
+
+            var possuiOrdemServico = await db.OrdensServico
+                .AnyAsync(ordem => ordem.AgendamentoId == id);
+            if (possuiOrdemServico)
+            {
+                if (agendamento.Status == status)
+                    return Resultado.Ok();
+                if (status != StatusAgendamento.EmAndamento
+                    || agendamento.Status != StatusAgendamento.Pendente)
+                {
+                    return Resultado.Falha(
+                        "A conclusão ou o cancelamento deste atendimento deve ser feito pela ordem de serviço.");
+                }
+            }
 
             if (status != StatusAgendamento.Cancelado)
             {
@@ -241,7 +264,8 @@ public sealed class AgendaService : IAgendaService
                 agendamento.DataHoraFim,
                 agendamento.DuracaoMinutos,
                 agendamento.DescricaoServico,
-                agendamento.Status))
+                agendamento.Status,
+                db.OrdensServico.Any(ordem => ordem.AgendamentoId == agendamento.Id)))
             .FirstOrDefaultAsync();
     }
 

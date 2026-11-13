@@ -5,7 +5,7 @@
 | Feature | [F04](../features/) |
 | Requisitos | RF08 |
 | Origem | Documento (UC04 e seção 2.5) |
-| Status | A fazer |
+| Status | Implementada |
 
 ## História
 
@@ -15,11 +15,11 @@
 
 ## Critérios de aceite
 
-- [ ] Cada agendamento gera no máximo uma OS (índice único em AgendamentoId).
-- [ ] A OS registra relatório técnico, mão de obra e materiais com quantidades.
-- [ ] Cada ItemOS grava o valor unitário vigente no momento do atendimento, sem ser alterado por mudanças posteriores no cadastro.
-- [ ] Valor total = mão de obra + Σ (quantidade × valor unitário).
-- [ ] A OS pode ser consultada e atualizada enquanto não estiver concluída.
+- [x] Cada agendamento gera no máximo uma OS (índice único em AgendamentoId).
+- [x] A OS registra relatório técnico, mão de obra e materiais com quantidades.
+- [x] Cada ItemOS grava o valor unitário vigente no momento da inclusão, sem ser alterado por mudanças posteriores no cadastro.
+- [x] Valor total = mão de obra + Σ (quantidade × valor unitário).
+- [x] A OS pode ser consultada e atualizada enquanto não estiver concluída.
 
 ## Notas técnicas
 
@@ -28,7 +28,7 @@
 
 ## Definição de pronto
 
-- [ ] Critérios de aceite atendidos
-- [ ] Testes escritos e passando
-- [ ] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
+- [x] Critérios de aceite atendidos
+- [x] Testes escritos e passando
+- [x] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
 - [ ] Merge na `develop` via pull request

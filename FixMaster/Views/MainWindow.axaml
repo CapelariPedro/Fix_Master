@@ -100,6 +100,12 @@
                         <TextBlock Text="AGENDA" FontSize="11" LetterSpacing="1" />
                     </Button>
                     <Button Classes="sw-nav"
+                            Command="{Binding AbrirOrdensServicoCommand}"
+                            HorizontalContentAlignment="Left"
+                            Padding="16,12" MinHeight="42">
+                        <TextBlock Text="ORDENS DE SERVIÇO" FontSize="11" LetterSpacing="1" />
+                    </Button>
+                    <Button Classes="sw-nav"
                             IsVisible="{Binding IsAdministrador}"
                             Command="{Binding AbrirUsuariosCommand}"
                             HorizontalContentAlignment="Left"

@@ -12,6 +12,7 @@ public sealed partial class MainViewModel : ViewModelBase
     private readonly IClienteService _clienteService;
     private readonly IEstoqueService _estoqueService;
     private readonly IAgendaService _agendaService;
+    private readonly IOrdemServicoService _ordemServicoService;
     private object _currentScreen;
     private bool _isAdministrador;
     private bool _isPainelAutenticado;
@@ -24,12 +25,14 @@ public sealed partial class MainViewModel : ViewModelBase
         IAuthService auth,
         IClienteService clienteService,
         IEstoqueService estoqueService,
-        IAgendaService agendaService)
+        IAgendaService agendaService,
+        IOrdemServicoService ordemServicoService)
     {
         _auth = auth;
         _clienteService = clienteService;
         _estoqueService = estoqueService;
         _agendaService = agendaService;
+        _ordemServicoService = ordemServicoService;
         _currentScreen = _auth.ExisteUsuario()
             ? CriarTelaLogin()
             : new PrimeiroAcessoViewModel(
@@ -98,14 +101,24 @@ public sealed partial class MainViewModel : ViewModelBase
         (CurrentScreen as ShellViewModel)?.MostrarClientes();
 
     [RelayCommand]
-    private void AbrirEstoque() =>
-        (CurrentScreen as ShellViewModel)?.MostrarEstoque();
+    private async Task AbrirEstoqueAsync()
+    {
+        if (CurrentScreen is ShellViewModel shell)
+            await shell.MostrarEstoqueAsync();
+    }
 
     [RelayCommand]
     private async Task AbrirAgendaAsync()
     {
         if (CurrentScreen is ShellViewModel shell)
             await shell.MostrarAgendaAsync();
+    }
+
+    [RelayCommand]
+    private async Task AbrirOrdensServicoAsync()
+    {
+        if (CurrentScreen is ShellViewModel shell)
+            await shell.MostrarOrdensServicoAsync();
     }
 
     [RelayCommand]
@@ -121,7 +134,12 @@ public sealed partial class MainViewModel : ViewModelBase
         UsuarioLogadoNome = usuario.Username;
         PerfilLogado = usuario.EhAdministrador ? "ADMINISTRADOR" : "OPERADOR";
         var shell = new ShellViewModel(
-            _auth, _clienteService, _estoqueService, _agendaService, usuario);
+            _auth,
+            _clienteService,
+            _estoqueService,
+            _agendaService,
+            _ordemServicoService,
+            usuario);
         await shell.InicializarAsync();
         CurrentScreen = shell;
         IsPainelAutenticado = true;
