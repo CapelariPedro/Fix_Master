@@ -6,7 +6,7 @@
         x:DataType="vm:MainViewModel"
         Title="FixMaster"
         Icon="/Assets/logos/logo_vb_colorido.ico"
-        WindowState="FullScreen"
+        WindowState="Maximized"
         Background="{DynamicResource SwBgBrush}"
         FontFamily="Futura, Jost, Century Gothic, Segoe UI">
 

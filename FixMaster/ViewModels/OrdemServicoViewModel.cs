@@ -51,6 +51,9 @@ public sealed partial class OrdemServicoViewModel : ViewModelBase
     private bool _isEditando;
 
     [ObservableProperty]
+    private bool _isListaMateriaisAberta;
+
+    [ObservableProperty]
     private string _relatorioTecnico = "";
 
     [ObservableProperty]
@@ -88,6 +91,7 @@ public sealed partial class OrdemServicoViewModel : ViewModelBase
     public bool TemSelecionada => Selecionada is not null;
     public bool TemOrdens => Ordens.Count > 0;
     public bool TemAgendamentosDisponiveis => AgendamentosDisponiveis.Count > 0;
+    public bool TemMateriaisDisponiveis => MateriaisDisponiveis.Count > 0;
 
     partial void OnSelecionadaChanged(OrdemServico? value)
     {
@@ -105,6 +109,15 @@ public sealed partial class OrdemServicoViewModel : ViewModelBase
 
     partial void OnAgendamentoSelecionadoChanged(AgendamentoResumo? value) =>
         OnPropertyChanged(nameof(PodeSalvar));
+
+    partial void OnFiltroMaterialChanged(string value) =>
+        IsListaMateriaisAberta = false;
+
+    partial void OnMaterialSelecionadoChanged(ItemEstoque? value)
+    {
+        if (value is not null)
+            IsListaMateriaisAberta = false;
+    }
 
     partial void OnMaoDeObraTextoChanged(string value) =>
         OnPropertyChanged(nameof(TotalFormulario));
@@ -150,7 +163,7 @@ public sealed partial class OrdemServicoViewModel : ViewModelBase
         OnPropertyChanged(nameof(TemAgendamentosDisponiveis));
         AgendamentoSelecionado = AgendamentosDisponiveis.FirstOrDefault();
         IsFormularioAberto = true;
-        await BuscarMateriaisAsync();
+        await CarregarMateriaisAsync(false);
     }
 
     [RelayCommand]
@@ -201,12 +214,15 @@ public sealed partial class OrdemServicoViewModel : ViewModelBase
         OnPropertyChanged(nameof(TemAgendamentosDisponiveis));
         Mensagem = null;
         IsFormularioAberto = true;
-        await BuscarMateriaisAsync();
+        await CarregarMateriaisAsync(false);
     }
 
     [RelayCommand]
-    private async Task BuscarMateriaisAsync()
+    private Task BuscarMateriaisAsync() => CarregarMateriaisAsync(true);
+
+    private async Task CarregarMateriaisAsync(bool abrirLista)
     {
+        IsListaMateriaisAberta = false;
         var resultado = await _estoqueService.BuscarAsync(FiltroMaterial);
         if (!resultado.Sucesso || resultado.Valor is null)
         {
@@ -217,12 +233,15 @@ public sealed partial class OrdemServicoViewModel : ViewModelBase
         MateriaisDisponiveis.Clear();
         foreach (var material in resultado.Valor)
             MateriaisDisponiveis.Add(material);
+        OnPropertyChanged(nameof(TemMateriaisDisponiveis));
 
         if (MaterialSelecionado is not null
             && MateriaisDisponiveis.All(item => item.Id != MaterialSelecionado.Id))
         {
             MaterialSelecionado = null;
         }
+
+        IsListaMateriaisAberta = abrirLista;
     }
 
     [RelayCommand]
@@ -406,6 +425,7 @@ public sealed partial class OrdemServicoViewModel : ViewModelBase
     {
         AgendamentoSelecionado = null;
         MaterialSelecionado = null;
+        IsListaMateriaisAberta = false;
         RelatorioTecnico = "";
         MaoDeObraTexto = "0,00";
         FiltroMaterial = "";
