@@ -248,8 +248,8 @@ public sealed class EstoqueService : IEstoqueService
             return "Categoria: use no máximo 80 caracteres.";
         if (item.Quantidade < 0)
             return "Quantidade: informe um valor igual ou maior que zero.";
-        if (item.PrecoUnitario < 0)
-            return "Preço unitário: informe um valor igual ou maior que zero.";
+        if (item.PrecoUnitario is < 0 or > 99999999.99m)
+            return "Preço unitário: informe um valor entre R$ 0,00 e R$ 99.999.999,99.";
         if (!LocalizacaoValidator.TryNormalizar(
                 item.Prateleira, item.Posicao, out _, out var erro))
         {

@@ -19,6 +19,7 @@
 - [x] Dias com atendimentos são indicados no calendário.
 - [x] Selecionar uma data atualiza a grade diária.
 - [x] Os status Pendente, Em Andamento e Concluído são distinguíveis por cor e por texto (não apenas por cor).
+- [x] A duração do agendamento é informada em horas inteiras, entre 1 e 24.
 
 ## Notas técnicas
 

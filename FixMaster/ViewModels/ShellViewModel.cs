@@ -17,6 +17,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     private readonly IClienteService _clienteService;
     private readonly IEstoqueService _estoqueService;
     private readonly IAgendaService _agendaService;
+    private readonly IOrdemServicoService _ordemServicoService;
     private readonly UsuarioAutenticado _usuarioLogado;
 
     [ObservableProperty]
@@ -48,6 +49,9 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isAgendaView;
+
+    [ObservableProperty]
+    private bool _isOrdensServicoView;
 
     [ObservableProperty]
     private string _filtroClientes = "";
@@ -99,15 +103,18 @@ public sealed partial class ShellViewModel : ViewModelBase
         IClienteService clienteService,
         IEstoqueService estoqueService,
         IAgendaService agendaService,
+        IOrdemServicoService ordemServicoService,
         UsuarioAutenticado usuarioLogado)
     {
         _auth = auth;
         _clienteService = clienteService;
         _estoqueService = estoqueService;
         _agendaService = agendaService;
+        _ordemServicoService = ordemServicoService;
         _usuarioLogado = usuarioLogado;
         Estoque = new EstoqueViewModel(_estoqueService);
         Agenda = new AgendaViewModel(_agendaService, _clienteService);
+        OrdensServico = new OrdemServicoViewModel(_ordemServicoService, _estoqueService);
         IsAdministrador = usuarioLogado.EhAdministrador;
     }
 
@@ -116,6 +123,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     public ObservableCollection<ClienteResumo> ClientesFiltrados { get; } = [];
     public EstoqueViewModel Estoque { get; }
     public AgendaViewModel Agenda { get; }
+    public OrdemServicoViewModel OrdensServico { get; }
 
     public bool IsOperador => !IsAdministrador;
     public bool IsUsuariosView => IsAdministrador && IsUsuariosPanelAberto && !IsEstoqueView;
@@ -152,6 +160,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     {
         IsEstoqueView = false;
         IsAgendaView = false;
+        IsOrdensServicoView = false;
         IsClientesPanelAberto = false;
         IsUsuariosPanelAberto = false;
     }
@@ -160,6 +169,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     {
         IsEstoqueView = false;
         IsAgendaView = false;
+        IsOrdensServicoView = false;
         IsUsuariosPanelAberto = false;
         IsClientesPanelAberto = true;
     }
@@ -167,18 +177,31 @@ public sealed partial class ShellViewModel : ViewModelBase
     public async Task MostrarAgendaAsync()
     {
         IsEstoqueView = false;
+        IsOrdensServicoView = false;
         IsClientesPanelAberto = false;
         IsUsuariosPanelAberto = false;
         IsAgendaView = true;
         await Agenda.CarregarAsync();
     }
 
-    public void MostrarEstoque()
+    public async Task MostrarOrdensServicoAsync()
+    {
+        IsEstoqueView = false;
+        IsAgendaView = false;
+        IsClientesPanelAberto = false;
+        IsUsuariosPanelAberto = false;
+        IsOrdensServicoView = true;
+        await OrdensServico.CarregarAsync();
+    }
+
+    public async Task MostrarEstoqueAsync()
     {
         IsClientesPanelAberto = false;
         IsUsuariosPanelAberto = false;
         IsAgendaView = false;
+        IsOrdensServicoView = false;
         IsEstoqueView = true;
+        await Estoque.AtualizarCommand.ExecuteAsync(null);
     }
 
     public void MostrarUsuarios()
@@ -188,6 +211,7 @@ public sealed partial class ShellViewModel : ViewModelBase
 
         IsEstoqueView = false;
         IsAgendaView = false;
+        IsOrdensServicoView = false;
         IsClientesPanelAberto = false;
         IsUsuariosPanelAberto = true;
     }
@@ -201,6 +225,8 @@ public sealed partial class ShellViewModel : ViewModelBase
             await CarregarClientesAsync();
         if (IsAgendaView)
             await Agenda.CarregarAsync();
+        if (IsOrdensServicoView)
+            await OrdensServico.CarregarAsync();
     }
 
     [RelayCommand]

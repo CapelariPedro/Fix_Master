@@ -11,7 +11,8 @@ public sealed record AgendamentoResumo(
     DateTime DataHoraFim,
     int DuracaoMinutos,
     string DescricaoServico,
-    StatusAgendamento Status)
+    StatusAgendamento Status,
+    bool PossuiOrdemServico = false)
 {
     public string Horario =>
         $"{DataHoraInicio:HH:mm}–{DataHoraFim:HH:mm}";
@@ -29,5 +30,10 @@ public sealed record AgendamentoResumo(
     public bool IsEmAndamento => Status == StatusAgendamento.EmAndamento;
     public bool IsConcluido => Status == StatusAgendamento.Concluido;
     public bool IsCancelado => Status == StatusAgendamento.Cancelado;
-    public bool IsEditavel => Status != StatusAgendamento.Cancelado;
+    public bool IsEditavel => Status != StatusAgendamento.Cancelado && !PossuiOrdemServico;
+    public bool IsCancelavel =>
+        Status is StatusAgendamento.Pendente or StatusAgendamento.EmAndamento
+        && !PossuiOrdemServico;
+    public bool IsConcluivel =>
+        Status == StatusAgendamento.EmAndamento && !PossuiOrdemServico;
 }

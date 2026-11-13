@@ -34,7 +34,7 @@ public sealed partial class AgendaViewModel : ViewModelBase
     private string _horaInicioFormulario = "09:00";
 
     [ObservableProperty]
-    private string _duracaoFormulario = "60";
+    private string _duracaoFormulario = "1";
 
     [ObservableProperty]
     private string _descricaoFormulario = "";
@@ -146,7 +146,7 @@ public sealed partial class AgendaViewModel : ViewModelBase
         ClienteSelecionado = Clientes.FirstOrDefault();
         DataFormulario = DataSelecionada.ToString("dd/MM/yyyy", CulturaPtBr);
         HoraInicioFormulario = "09:00";
-        DuracaoFormulario = "60";
+        DuracaoFormulario = "1";
         DescricaoFormulario = "";
         MensagemErro = null;
         IsFormularioAberto = true;
@@ -163,7 +163,8 @@ public sealed partial class AgendaViewModel : ViewModelBase
             cliente.Id == agendamento.ClienteId);
         DataFormulario = agendamento.DataHoraInicio.ToString("dd/MM/yyyy", CulturaPtBr);
         HoraInicioFormulario = agendamento.DataHoraInicio.ToString("HH:mm");
-        DuracaoFormulario = agendamento.DuracaoMinutos.ToString(CulturaPtBr);
+        DuracaoFormulario = Math.Max(1, (agendamento.DuracaoMinutos + 59) / 60)
+            .ToString(CulturaPtBr);
         DescricaoFormulario = agendamento.DescricaoServico;
         MensagemErro = null;
         IsFormularioAberto = true;
@@ -203,9 +204,10 @@ public sealed partial class AgendaViewModel : ViewModelBase
             return;
         }
 
-        if (!int.TryParse(DuracaoFormulario, NumberStyles.None, CulturaPtBr, out var duracao))
+        if (!int.TryParse(DuracaoFormulario, NumberStyles.None, CulturaPtBr, out var duracaoHoras)
+            || duracaoHoras is < 1 or > 24)
         {
-            MensagemErro = "Informe a duração em minutos, entre 1 e 1440.";
+            MensagemErro = "Informe a duração em horas inteiras, entre 1 e 24.";
             return;
         }
 
@@ -216,7 +218,7 @@ public sealed partial class AgendaViewModel : ViewModelBase
             Id = IdAgendamentoEmEdicao,
             ClienteId = ClienteSelecionado.Id,
             DataHoraInicio = DateTime.SpecifyKind(data.Date + horario, DateTimeKind.Unspecified),
-            DuracaoMinutos = duracao,
+            DuracaoMinutos = duracaoHoras * 60,
             DescricaoServico = DescricaoFormulario
         });
         IsSalvando = false;

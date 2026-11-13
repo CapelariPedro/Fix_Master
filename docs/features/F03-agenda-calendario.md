@@ -15,12 +15,12 @@ Organizar compromissos em calendário mensal e grade diária, sem permitir sobre
 ## Telas (estilo Starfield)
 
 - `AgendaView`: calendário mensal à esquerda, grade diária à direita (linhas por hora), barra superior com mês/ano e navegação.
-- `AgendamentoFormView`: cliente, descrição, data, hora de início, duração.
+- `AgendamentoFormView`: cliente, descrição, data, hora de início e duração informada em horas inteiras (1–24).
 - Selo de status: Pendente (âmbar), Em Andamento (azul), Concluído (verde), sempre acompanhado de texto.
 
 ## Entidades envolvidas
 
-- `Agendamento` (Id, ClienteId, DataHoraInicio, DuracaoMinutos, DataHoraFim, DescricaoServico, Status)
+- `Agendamento` (Id, ClienteId, DataHoraInicio, duração interna em minutos, DataHoraFim, DescricaoServico, Status)
 
 ## Serviços e regras de negócio
 
@@ -32,6 +32,7 @@ Organizar compromissos em calendário mensal e grade diária, sem permitir sobre
 - O término é calculado e **gravado** (`DataHoraFim`) para que a consulta seja traduzida pelo EF Core no SQLite.
 - Usar `DateTime` (e não `DateTimeOffset`) pelo mesmo motivo.
 - Status inicial: Pendente.
+- A interface informa duração em horas inteiras; o serviço converte para minutos para calcular horários e compatibilizar registros já existentes.
 
 ### Esboço da verificação de conflito
 

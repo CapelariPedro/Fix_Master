@@ -5,7 +5,7 @@
 | Feature | [F04](../features/) |
 | Requisitos | RF09 |
 | Origem | Pergunta 6 da entrevista |
-| Status | A fazer |
+| Status | Implementada |
 
 ## História
 
@@ -15,11 +15,11 @@
 
 ## Critérios de aceite
 
-- [ ] Ao concluir a OS, cada ItemOS desconta sua quantidade do ItemEstoque correspondente.
-- [ ] Conclusão da OS, baixa de estoque e atualização de status ocorrem em uma única transação: ou tudo acontece, ou nada.
-- [ ] Se algum item não tiver estoque suficiente, nada é alterado e o sistema informa qual item falhou.
-- [ ] Uma segunda solicitação de conclusão não desconta novamente as quantidades.
-- [ ] A quantidade em estoque nunca fica negativa.
+- [x] Ao concluir a OS, cada ItemOS desconta sua quantidade do ItemEstoque correspondente.
+- [x] Conclusão da OS, baixa de estoque e atualização de status ocorrem em uma única transação: ou tudo acontece, ou nada.
+- [x] Se algum item não tiver estoque suficiente, nada é alterado e o sistema informa qual item falhou.
+- [x] Uma segunda solicitação de conclusão não desconta novamente as quantidades.
+- [x] A quantidade em estoque nunca fica negativa.
 
 ## Notas técnicas
 
@@ -28,7 +28,7 @@
 
 ## Definição de pronto
 
-- [ ] Critérios de aceite atendidos
-- [ ] Testes escritos e passando
-- [ ] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
+- [x] Critérios de aceite atendidos
+- [x] Testes escritos e passando
+- [x] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
 - [ ] Merge na `develop` via pull request

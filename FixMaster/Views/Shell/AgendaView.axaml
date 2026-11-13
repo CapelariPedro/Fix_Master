@@ -276,15 +276,15 @@
                                                                             <Button Content="CONCLUIR"
                                                                                     Command="{Binding $parent[UserControl].DataContext.ConcluirCommand}"
                                                                                     CommandParameter="{Binding .}"
-                                                                                    IsVisible="{Binding IsEmAndamento}" />
+                                                                                    IsVisible="{Binding IsConcluivel}" />
                                                                             <Button Content="CANCELAR"
                                                                                     Command="{Binding $parent[UserControl].DataContext.CancelarCommand}"
                                                                                     CommandParameter="{Binding .}"
-                                                                                    IsVisible="{Binding IsPendente}" />
+                                                                                    IsVisible="{Binding IsCancelavel}" />
                                                                             <Button Content="CANCELAR"
                                                                                     Command="{Binding $parent[UserControl].DataContext.CancelarCommand}"
                                                                                     CommandParameter="{Binding .}"
-                                                                                    IsVisible="{Binding IsEmAndamento}" />
+                                                                                    IsVisible="{Binding IsCancelavel}" />
                                                                         </StackPanel>
                                                                     </Grid>
                                                                 </Grid>
@@ -352,10 +352,10 @@
                                              PlaceholderText="09:00" />
                                 </StackPanel>
                             </Grid>
-                            <TextBlock Text="DURAÇÃO (MINUTOS)" Classes="sw-label" />
+                            <TextBlock Text="DURAÇÃO (HORAS)" Classes="sw-label" />
                             <TextBox Classes="sw-input"
                                      Text="{Binding DuracaoFormulario, UpdateSourceTrigger=PropertyChanged}"
-                                     PlaceholderText="60" />
+                                     PlaceholderText="1" />
                             <TextBlock Text="{Binding MensagemErro}"
                                        IsVisible="{Binding MensagemErro, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                                        TextWrapping="Wrap"
