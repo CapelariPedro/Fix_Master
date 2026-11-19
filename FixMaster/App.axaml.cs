@@ -32,6 +32,8 @@ public partial class App : Application
             services.AddSingleton<IEstoqueService, EstoqueService>();
             services.AddSingleton<IAgendaService, AgendaService>();
             services.AddSingleton<IOrdemServicoService, OrdemServicoService>();
+            services.AddSingleton<IAtividadeService, AtividadeService>();
+            services.AddSingleton<IDashboardService, DashboardService>();
             services.AddSingleton<MainViewModel>();
             _services = services.BuildServiceProvider();
 

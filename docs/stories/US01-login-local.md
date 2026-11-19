@@ -15,11 +15,11 @@
 
 ## Critérios de aceite
 
-- [ ] Ao abrir o app, a tela de login aparece antes de qualquer módulo.
-- [ ] Com credenciais válidas, o dashboard é aberto.
-- [ ] Com usuário inexistente ou senha incorreta, é exibida uma mensagem genérica (sem indicar qual campo errou) e o operador permanece no login.
-- [ ] A senha é armazenada somente como hash, nunca em texto puro.
-- [ ] Nenhum módulo pode ser acessado sem autenticação.
+- [X] Ao abrir o app, a tela de login aparece antes de qualquer módulo.
+- [X] Com credenciais válidas, o dashboard é aberto.
+- [X] Com usuário inexistente ou senha incorreta, é exibida uma mensagem genérica (sem indicar qual campo errou) e o operador permanece no login.
+- [X] A senha é armazenada somente como hash, nunca em texto puro.
+- [X] Nenhum módulo pode ser acessado sem autenticação.
 
 ## Notas técnicas
 
@@ -28,7 +28,7 @@
 
 ## Definição de pronto
 
-- [ ] Critérios de aceite atendidos
-- [ ] Testes escritos e passando
-- [ ] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
-- [ ] Merge na `develop` via pull request
+- [X] Critérios de aceite atendidos
+- [X] Testes escritos e passando
+- [X] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
+- [x] Merge na `develop` via pull request

@@ -5,9 +5,13 @@
              xmlns:estoque="using:FixMaster.Views.Shell"
              xmlns:agenda="using:FixMaster.Views.Shell"
              xmlns:ordem="using:FixMaster.Views.Shell"
+             xmlns:dashboard="using:FixMaster.Views.Shell"
              x:Class="FixMaster.Views.Shell.ShellView"
              x:DataType="vm:ShellViewModel">
     <Grid>
+        <Grid IsVisible="{Binding IsDashboardView}">
+            <dashboard:DashboardView DataContext="{Binding Dashboard}" />
+        </Grid>
         <Grid IsVisible="{Binding IsAgendaView}">
             <agenda:AgendaView DataContext="{Binding Agenda}" />
         </Grid>

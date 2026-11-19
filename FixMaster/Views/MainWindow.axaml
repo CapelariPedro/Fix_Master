@@ -9,6 +9,16 @@
         WindowState="Maximized"
         Background="{DynamicResource SwBgBrush}"
         FontFamily="Futura, Jost, Century Gothic, Segoe UI">
+        <Window.Styles>
+            <Style Selector="Button.sw-nav.ativo /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="#3A3A3D" />
+                <Setter Property="Foreground" Value="#E8E8EA" />
+            </Style>
+            <Style Selector="Button.sw-nav.ativo:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="#3A3A3D" />
+                <Setter Property="Foreground" Value="#E8E8EA" />
+            </Style>
+        </Window.Styles>
 
     <Grid RowDefinitions="*,56" ColumnDefinitions="Auto,*">
 
@@ -27,16 +37,6 @@
                        Fill="{DynamicResource SwMidBrush}" Opacity="0.6" />
             <Rectangle Height="2" VerticalAlignment="Top" Margin="260,28,0,0"
                        Fill="{DynamicResource SwMidBrush}" Opacity="0.6" />
-
-            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top"
-                        Margin="0,64,40,0" Spacing="2">
-                <TextBlock Text="FIXMASTER" FontSize="54" FontWeight="Bold"
-                           LetterSpacing="-2" HorizontalAlignment="Right"
-                           Foreground="{DynamicResource SwTitleBrush}" />
-                <TextBlock Text="SISTEMA DE GESTÃO" FontSize="16" FontWeight="SemiBold"
-                           LetterSpacing="7" HorizontalAlignment="Right"
-                           Foreground="{DynamicResource SwTitleBrush}" />
-            </StackPanel>
 
             <Canvas Width="320" Height="520"
                     HorizontalAlignment="Right" VerticalAlignment="Bottom">
@@ -61,7 +61,7 @@
                 IsVisible="{Binding IsPainelAutenticado}">
             <Grid RowDefinitions="Auto,*,Auto">
                 <StackPanel Grid.Row="0" Margin="16,18,16,24" Spacing="10">
-                    <Image Source="avares://FixMaster/Assets/logos/logo_vb_preto_branco.ico"
+                    <Image Source="avares://FixMaster/Assets/logos/logo_vb_colorido.ico"
                            Width="58" Height="58" Stretch="Uniform"
                            HorizontalAlignment="Left" />
                     <TextBlock Text="FIXMASTER"
@@ -76,60 +76,114 @@
 
                 <StackPanel Grid.Row="1" Spacing="6">
                     <Button Classes="sw-nav"
+                            Classes.ativo="{Binding IsAbaInicio}"
                             Command="{Binding AbrirInicioCommand}"
                             HorizontalContentAlignment="Left"
                             Padding="16,12" MinHeight="42">
-                        <TextBlock Text="INÍCIO" FontSize="11" LetterSpacing="1" />
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Image Source="avares://FixMaster/Assets/icons/home.png"
+                                Width="22" Height="22" Stretch="Uniform"
+                                RenderOptions.BitmapInterpolationMode="None" />
+                            <TextBlock Text="INÍCIO" FontSize="11" LetterSpacing="1"
+                                    VerticalAlignment="Center" />
+                        </StackPanel>
                     </Button>
                     <Button Classes="sw-nav"
+                            Classes.ativo="{Binding IsAbaClientes}"
                             Command="{Binding AbrirClientesCommand}"
                             HorizontalContentAlignment="Left"
                             Padding="16,12" MinHeight="42">
-                        <TextBlock Text="CLIENTES" FontSize="11" LetterSpacing="1" />
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Image Source="avares://FixMaster/Assets/icons/group.png"
+                                Width="22" Height="22" Stretch="Uniform"
+                                RenderOptions.BitmapInterpolationMode="None" />
+                            <TextBlock Text="CLIENTES" FontSize="11" LetterSpacing="1"
+                                    VerticalAlignment="Center" />
+                        </StackPanel>
                     </Button>
                     <Button Classes="sw-nav"
+                            Classes.ativo="{Binding IsAbaEstoque}"
                             Command="{Binding AbrirEstoqueCommand}"
                             HorizontalContentAlignment="Left"
                             Padding="16,12" MinHeight="42">
-                        <TextBlock Text="ESTOQUE" FontSize="11" LetterSpacing="1" />
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Image Source="avares://FixMaster/Assets/icons/warehouse.png"
+                                Width="22" Height="22" Stretch="Uniform"
+                                RenderOptions.BitmapInterpolationMode="None" />
+                            <TextBlock Text="ESTOQUE" FontSize="11" LetterSpacing="1"
+                                    VerticalAlignment="Center" />
+                        </StackPanel>
                     </Button>
                     <Button Classes="sw-nav"
+                            Classes.ativo="{Binding IsAbaAgenda}"
                             Command="{Binding AbrirAgendaCommand}"
                             HorizontalContentAlignment="Left"
                             Padding="16,12" MinHeight="42">
-                        <TextBlock Text="AGENDA" FontSize="11" LetterSpacing="1" />
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Image Source="avares://FixMaster/Assets/icons/calendar_month.png"
+                                Width="22" Height="22" Stretch="Uniform"
+                                RenderOptions.BitmapInterpolationMode="None" />
+                            <TextBlock Text="AGENDA" FontSize="11" LetterSpacing="1"
+                                    VerticalAlignment="Center" />
+                        </StackPanel>
                     </Button>
                     <Button Classes="sw-nav"
+                            Classes.ativo="{Binding IsAbaOrdensServico}"
                             Command="{Binding AbrirOrdensServicoCommand}"
                             HorizontalContentAlignment="Left"
                             Padding="16,12" MinHeight="42">
-                        <TextBlock Text="ORDENS DE SERVIÇO" FontSize="11" LetterSpacing="1" />
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Image Source="avares://FixMaster/Assets/icons/receipt.png"
+                                Width="22" Height="22" Stretch="Uniform"
+                                RenderOptions.BitmapInterpolationMode="None" />
+                            <TextBlock Text="ORDENS DE SERVIÇO" FontSize="11" LetterSpacing="1"
+                                    VerticalAlignment="Center" />
+                        </StackPanel>
                     </Button>
                     <Button Classes="sw-nav"
+                            Classes.ativo="{Binding IsAbaUsuarios}"
                             IsVisible="{Binding IsAdministrador}"
                             Command="{Binding AbrirUsuariosCommand}"
                             HorizontalContentAlignment="Left"
                             Padding="16,12" MinHeight="42">
-                        <TextBlock Text="USUÁRIOS" FontSize="11" LetterSpacing="1" />
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Image Source="avares://FixMaster/Assets/icons/manage_accounts.png"
+                                Width="22" Height="22" Stretch="Uniform"
+                                RenderOptions.BitmapInterpolationMode="None" />
+                            <TextBlock Text="USUÁRIOS" FontSize="11" LetterSpacing="1"
+                                    VerticalAlignment="Center" />
+                        </StackPanel>
                     </Button>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Margin="14" Spacing="10">
                     <Rectangle Height="1" Fill="#3A3A3D" />
-                    <TextBlock Text="{Binding UsuarioLogadoNome}"
-                               FontSize="11"
-                               Foreground="#E8E8EA"
-                               TextTrimming="CharacterEllipsis" />
+
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                        <Image Grid.Column="0"
+                            Source="avares://FixMaster/Assets/icons/person.png"
+                            Width="14" Height="14"
+                            VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1"
+                                Text="{Binding UsuarioLogadoNome}"
+                                FontSize="11"
+                                Foreground="#E8E8EA"
+                                VerticalAlignment="Center"
+                                TextTrimming="CharacterEllipsis" />
+                    </Grid>
+
                     <TextBlock Text="{Binding PerfilLogado}"
-                               FontSize="9"
-                               Foreground="#8E8E91" />
+                            FontSize="9"
+                            Foreground="#8E8E91"
+                            Margin="22,0,0,0" />
+
                     <Button IsVisible="{Binding IsAdministrador}"
                             Classes="sw-accent"
                             Command="{Binding AbrirCadastroUsuarioCommand}"
                             HorizontalContentAlignment="Left"
                             Padding="12,10" MinHeight="42">
                         <TextBlock Text="NOVO USUÁRIO"
-                                   FontSize="10" LetterSpacing="1" />
+                                FontSize="10" LetterSpacing="1" />
                     </Button>
                 </StackPanel>
             </Grid>
@@ -151,13 +205,16 @@
         <!-- Barra inferior -->
         <Border Grid.Row="1" Grid.ColumnSpan="2"
                 Background="{DynamicResource SwBarBrush}">
-            <Grid ColumnDefinitions="*,Auto,Auto" Margin="24,0" ColumnSpacing="18">
+            <Grid ColumnDefinitions="*,Auto,Auto,Auto" Margin="24,0" ColumnSpacing="18">
                 <TextBlock Text="FIXMASTER · v1.0" FontSize="11" LetterSpacing="3"
-                           Foreground="#6E6E72" VerticalAlignment="Center" />
-                <TextBlock Grid.Column="1" Text="SISTEMA DE GESTÃO" FontSize="11"
-                           LetterSpacing="3" Foreground="#E8E8EA"
-                           VerticalAlignment="Center" />
-                <Button Grid.Column="2" Classes="sw-accent"
+                        Foreground="#6E6E72" VerticalAlignment="Center" />
+                <TextBlock x:Name="RelogioRodape" Grid.Column="1"
+                        FontSize="11" LetterSpacing="3"
+                        Foreground="#E8E8EA" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="2" Text="SISTEMA DE GESTÃO" FontSize="11"
+                        LetterSpacing="3" Foreground="#8E8E91"
+                        VerticalAlignment="Center" />
+                <Button Grid.Column="3" Classes="sw-accent"
                         Content="SAIR DA APLICAÇÃO"
                         FontSize="11" LetterSpacing="1"
                         Padding="14,8" MinHeight="38"

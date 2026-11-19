@@ -30,5 +30,4 @@
 - [x] Critérios de aceite atendidos
 - [x] Testes escritos e passando
 - [x] Interface segue o design system Starfield
-- [ ] Merge na `develop` via pull request (pendente)
-- [ ] Merge na `develop` via pull request
+- [X] Merge na `develop` via pull request

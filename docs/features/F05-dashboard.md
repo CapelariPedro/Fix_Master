@@ -15,6 +15,7 @@ Mostrar ao abrir o app o resumo do dia e as atividades recentes.
 ## Telas (estilo Starfield)
 
 - `DashboardView`: grade de 4 cards (MARCADOS, PENDENTES, EM ANDAMENTO, CONCLUÍDOS) com número grande e rótulo em caixa alta.
+- Agendamentos do dia em ordem crescente de horário e uma lista dos agendamentos pendentes ou em andamento sem OS vinculada.
 - Painel ATIVIDADES RECENTES: lista vertical com horário, ícone simples e descrição, no estilo de log de missão.
 
 ## Entidades envolvidas
@@ -35,14 +36,13 @@ Mostrar ao abrir o app o resumo do dia e as atividades recentes.
 
 ## Tarefas técnicas
 
-- [ ] Criar `AtividadeRecente` e configuração EF
-- [ ] Chamar o registro de atividade em Agenda, OS e Clientes
-- [ ] Implementar `DashboardService`
-- [ ] Criar `DashboardViewModel` e `DashboardView`
+- [X] Criar `AtividadeRecente` e configuração EF
+- [X] Chamar o registro de atividade em Agenda, OS e Clientes
+- [X] Implementar `DashboardService`
+- [X] Criar `DashboardViewModel` e `DashboardView`
 
 ## Definição de pronto
 
-- [ ] Todas as histórias da feature concluídas
-- [ ] Regras de negócio cobertas por testes unitários
-- [ ] Funciona offline
-- [ ] Atividade relevante registrada no feed (quando aplicável)
+- [X] Todas as histórias da feature concluídas
+- [X] Regras de negócio cobertas por testes unitários
+- [X] Funciona offline

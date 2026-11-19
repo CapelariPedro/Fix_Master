@@ -145,10 +145,16 @@ public sealed partial class OrdemServicoViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task NovaAsync()
+    private Task NovaAsync() => AbrirNovaAsync(null);
+
+    public Task NovaParaAgendamentoAsync(int agendamentoId) =>
+        AbrirNovaAsync(agendamentoId);
+
+    private async Task AbrirNovaAsync(int? agendamentoId)
     {
         LimparFormulario();
         IsEditando = false;
+        IsFormularioAberto = false;
         Mensagem = null;
         var resultado = await _ordemServicoService.ListarAgendamentosDisponiveisAsync();
         if (!resultado.Sucesso || resultado.Valor is null)
@@ -157,13 +163,35 @@ public sealed partial class OrdemServicoViewModel : ViewModelBase
             return;
         }
 
+        var agendamentoSelecionado = agendamentoId is int id
+            ? resultado.Valor.FirstOrDefault(item => item.Id == id)
+            : resultado.Valor.FirstOrDefault();
+        if (agendamentoId is not null && agendamentoSelecionado is null)
+        {
+            Mensagem = "O agendamento não está mais disponível para abrir uma OS.";
+            return;
+        }
+
         AgendamentosDisponiveis.Clear();
         foreach (var agendamento in resultado.Valor)
             AgendamentosDisponiveis.Add(agendamento);
         OnPropertyChanged(nameof(TemAgendamentosDisponiveis));
-        AgendamentoSelecionado = AgendamentosDisponiveis.FirstOrDefault();
+        AgendamentoSelecionado = agendamentoSelecionado;
         IsFormularioAberto = true;
         await CarregarMateriaisAsync(false);
+    }
+
+    public void SelecionarPorId(int id)
+    {
+        var ordem = Ordens.FirstOrDefault(item => item.Id == id);
+        if (ordem is null)
+        {
+            Mensagem = $"A ordem de serviço #{id} relacionada a esta atividade não foi encontrada.";
+            return;
+        }
+
+        Selecionada = ordem;
+        Mensagem = null;
     }
 
     [RelayCommand]

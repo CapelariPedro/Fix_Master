@@ -281,10 +281,6 @@
                                                                                     Command="{Binding $parent[UserControl].DataContext.CancelarCommand}"
                                                                                     CommandParameter="{Binding .}"
                                                                                     IsVisible="{Binding IsCancelavel}" />
-                                                                            <Button Content="CANCELAR"
-                                                                                    Command="{Binding $parent[UserControl].DataContext.CancelarCommand}"
-                                                                                    CommandParameter="{Binding .}"
-                                                                                    IsVisible="{Binding IsCancelavel}" />
                                                                         </StackPanel>
                                                                     </Grid>
                                                                 </Grid>

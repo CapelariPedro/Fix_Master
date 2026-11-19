@@ -18,6 +18,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     private readonly IEstoqueService _estoqueService;
     private readonly IAgendaService _agendaService;
     private readonly IOrdemServicoService _ordemServicoService;
+    private readonly IDashboardService _dashboardService;
     private readonly UsuarioAutenticado _usuarioLogado;
 
     [ObservableProperty]
@@ -52,6 +53,9 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     [ObservableProperty]
     private bool _isOrdensServicoView;
+
+    [ObservableProperty]
+    private bool _isDashboardView = true;
 
     [ObservableProperty]
     private string _filtroClientes = "";
@@ -104,6 +108,7 @@ public sealed partial class ShellViewModel : ViewModelBase
         IEstoqueService estoqueService,
         IAgendaService agendaService,
         IOrdemServicoService ordemServicoService,
+        IDashboardService dashboardService,
         UsuarioAutenticado usuarioLogado)
     {
         _auth = auth;
@@ -111,10 +116,17 @@ public sealed partial class ShellViewModel : ViewModelBase
         _estoqueService = estoqueService;
         _agendaService = agendaService;
         _ordemServicoService = ordemServicoService;
+        _dashboardService = dashboardService;
         _usuarioLogado = usuarioLogado;
         Estoque = new EstoqueViewModel(_estoqueService);
         Agenda = new AgendaViewModel(_agendaService, _clienteService);
         OrdensServico = new OrdemServicoViewModel(_ordemServicoService, _estoqueService);
+        Dashboard = new DashboardViewModel(
+            _dashboardService,
+            AbrirAgendaNaDataAsync,
+            AbrirNovaOrdemServicoAsync,
+            AbrirAtividadeAsync,
+            AbrirOrdemExistenteAsync);
         IsAdministrador = usuarioLogado.EhAdministrador;
     }
 
@@ -124,6 +136,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     public EstoqueViewModel Estoque { get; }
     public AgendaViewModel Agenda { get; }
     public OrdemServicoViewModel OrdensServico { get; }
+    public DashboardViewModel Dashboard { get; }
 
     public bool IsOperador => !IsAdministrador;
     public bool IsUsuariosView => IsAdministrador && IsUsuariosPanelAberto && !IsEstoqueView;
@@ -153,20 +166,25 @@ public sealed partial class ShellViewModel : ViewModelBase
             await CarregarUsuariosAsync();
         await Estoque.InicializarAsync();
         await Agenda.InicializarAsync();
+        await Dashboard.InicializarAsync();
+        MostrarInicio();
     }
 
     [RelayCommand]
     public void MostrarInicio()
     {
+        IsDashboardView = true;
         IsEstoqueView = false;
         IsAgendaView = false;
         IsOrdensServicoView = false;
         IsClientesPanelAberto = false;
         IsUsuariosPanelAberto = false;
+        _ = Dashboard.CarregarAsync();
     }
 
     public void MostrarClientes()
     {
+        IsDashboardView = false;
         IsEstoqueView = false;
         IsAgendaView = false;
         IsOrdensServicoView = false;
@@ -176,6 +194,7 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     public async Task MostrarAgendaAsync()
     {
+        IsDashboardView = false;
         IsEstoqueView = false;
         IsOrdensServicoView = false;
         IsClientesPanelAberto = false;
@@ -186,6 +205,7 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     public async Task MostrarOrdensServicoAsync()
     {
+        IsDashboardView = false;
         IsEstoqueView = false;
         IsAgendaView = false;
         IsClientesPanelAberto = false;
@@ -194,8 +214,38 @@ public sealed partial class ShellViewModel : ViewModelBase
         await OrdensServico.CarregarAsync();
     }
 
+    private async Task AbrirAgendaNaDataAsync(DateTime data)
+    {
+        Agenda.DataSelecionada = data.Date;
+        Agenda.MesExibido = new DateTime(data.Year, data.Month, 1);
+        await MostrarAgendaAsync();
+    }
+
+    private async Task AbrirNovaOrdemServicoAsync(AgendamentoResumo agendamento)
+    {
+        await MostrarOrdensServicoAsync();
+        await OrdensServico.NovaParaAgendamentoAsync(agendamento.Id);
+    }
+
+    private async Task AbrirOrdemExistenteAsync(int idOrdem)
+    {
+        await MostrarOrdensServicoAsync();
+        OrdensServico.SelecionarPorId(idOrdem);
+    }
+
+    private async Task AbrirAtividadeAsync(AtividadeRecente atividade)
+    {
+        await MostrarOrdensServicoAsync();
+        if (atividade.Tipo.StartsWith("ORDEM_SERVICO", StringComparison.OrdinalIgnoreCase)
+            && atividade.ReferenciaId is int idOrdem)
+        {
+            OrdensServico.SelecionarPorId(idOrdem);
+        }
+    }
+
     public async Task MostrarEstoqueAsync()
     {
+        IsDashboardView = false;
         IsClientesPanelAberto = false;
         IsUsuariosPanelAberto = false;
         IsAgendaView = false;
@@ -209,6 +259,7 @@ public sealed partial class ShellViewModel : ViewModelBase
         if (!IsAdministrador)
             return;
 
+        IsDashboardView = false;
         IsEstoqueView = false;
         IsAgendaView = false;
         IsOrdensServicoView = false;
@@ -227,6 +278,8 @@ public sealed partial class ShellViewModel : ViewModelBase
             await Agenda.CarregarAsync();
         if (IsOrdensServicoView)
             await OrdensServico.CarregarAsync();
+        if (IsDashboardView)
+            await Dashboard.CarregarAsync();
     }
 
     [RelayCommand]

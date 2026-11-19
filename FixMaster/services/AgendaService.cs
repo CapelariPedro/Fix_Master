@@ -119,9 +119,12 @@ public sealed class AgendaService : IAgendaService
                 agendamento.DataHoraInicio.AddMinutes(agendamento.DuracaoMinutos);
             agendamento.DescricaoServico = agendamento.DescricaoServico.Trim();
 
-            if (agendamento.Id == 0)
+            var novoCadastro = agendamento.Id == 0;
+            if (novoCadastro)
             {
-                agendamento.Status = StatusAgendamento.Pendente;
+                agendamento.Status = agendamento.Status == StatusAgendamento.Cancelado
+                    ? StatusAgendamento.Pendente
+                    : agendamento.Status;
                 db.Agendamentos.Add(agendamento);
             }
             else
@@ -136,6 +139,9 @@ public sealed class AgendaService : IAgendaService
                 existente.DuracaoMinutos = agendamento.DuracaoMinutos;
                 existente.DataHoraFim = agendamento.DataHoraFim;
                 existente.DescricaoServico = agendamento.DescricaoServico;
+                existente.Status = agendamento.Status == StatusAgendamento.Cancelado
+                    ? StatusAgendamento.Pendente
+                    : agendamento.Status;
             }
 
             await db.SaveChangesAsync();
