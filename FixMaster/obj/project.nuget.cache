@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "HvLQxgV3hCw=",
+  "dgSpecHash": "+G8eyOmFowk=",
   "success": true,
   "projectFilePath": "/home/commodore_64/Documentos/Engenharia de Software/Projeto/Fix_Master/FixMaster/FixMaster.csproj",
   "expectedPackageFiles": [
@@ -72,7 +72,10 @@
     "/home/commodore_64/.nuget/packages/system.composition.hosting/9.0.0/system.composition.hosting.9.0.0.nupkg.sha512",
     "/home/commodore_64/.nuget/packages/system.composition.runtime/9.0.0/system.composition.runtime.9.0.0.nupkg.sha512",
     "/home/commodore_64/.nuget/packages/system.composition.typedparts/9.0.0/system.composition.typedparts.9.0.0.nupkg.sha512",
-    "/home/commodore_64/.nuget/packages/tmds.dbus.protocol/0.94.1/tmds.dbus.protocol.0.94.1.nupkg.sha512"
+    "/home/commodore_64/.nuget/packages/tmds.dbus.protocol/0.94.1/tmds.dbus.protocol.0.94.1.nupkg.sha512",
+    "/home/commodore_64/.nuget/packages/microsoft.netcore.app.runtime.osx-arm64/10.0.13/microsoft.netcore.app.runtime.osx-arm64.10.0.13.nupkg.sha512",
+    "/home/commodore_64/.nuget/packages/microsoft.aspnetcore.app.runtime.osx-arm64/10.0.13/microsoft.aspnetcore.app.runtime.osx-arm64.10.0.13.nupkg.sha512",
+    "/home/commodore_64/.nuget/packages/microsoft.netcore.app.host.osx-arm64/10.0.13/microsoft.netcore.app.host.osx-arm64.10.0.13.nupkg.sha512"
   ],
   "logs": []
 }
