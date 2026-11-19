@@ -1,0 +1,41 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Cores principais -->
+    <Color x:Key="BgColor">#A9A9AB</Color>
+    <Color x:Key="SurfaceColor">#D4D4D6</Color>
+    <Color x:Key="AccentColor">#1A1A1C</Color>
+    <Color x:Key="TextColor">#1A1A1C</Color>
+    <Color x:Key="SecondaryTextColor">#555559</Color>
+    <Color x:Key="BorderColor">#707074</Color>
+
+    <!-- Brushes -->
+    <SolidColorBrush x:Key="BgBrush"
+                     Color="{StaticResource BgColor}" />
+
+    <SolidColorBrush x:Key="SurfaceBrush"
+                     Color="{StaticResource SurfaceColor}" />
+
+    <SolidColorBrush x:Key="AccentBrush"
+                     Color="{StaticResource AccentColor}" />
+
+    <SolidColorBrush x:Key="TextBrush"
+                     Color="{StaticResource TextColor}" />
+
+    <SolidColorBrush x:Key="SfBgBrush"
+                     Color="{StaticResource BgColor}" />
+    <SolidColorBrush x:Key="SfPanelBrush"
+                     Color="{StaticResource SurfaceColor}" />
+    <SolidColorBrush x:Key="SfAccentBrush"
+                     Color="{StaticResource AccentColor}" />
+    <SolidColorBrush x:Key="SfTextBrush"
+                     Color="{StaticResource TextColor}" />
+    <SolidColorBrush x:Key="SfTextMutedBrush"
+                     Color="{StaticResource SecondaryTextColor}" />
+    <SolidColorBrush x:Key="SfLineBrush"
+                     Color="{StaticResource BorderColor}" />
+    <SolidColorBrush x:Key="SfDangerBrush"
+                     Color="#FF6B6B" />
+
+</ResourceDictionary>

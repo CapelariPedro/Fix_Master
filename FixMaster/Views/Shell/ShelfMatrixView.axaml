@@ -1,0 +1,93 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FixMaster.ViewModels"
+             x:Class="FixMaster.Views.Shell.ShelfMatrixView"
+             x:DataType="vm:EstoqueViewModel">
+    <Border Background="{DynamicResource SwPanelBrush}"
+            BorderBrush="{DynamicResource SwMidBrush}"
+            BorderThickness="1"
+            Padding="16">
+        <Grid RowDefinitions="Auto,Auto,*">
+            <TextBlock Text="MAPA DO DEPÓSITO"
+                       FontSize="14" FontWeight="SemiBold"
+                       LetterSpacing="2"
+                       Foreground="{DynamicResource SwInkBrush}" />
+            <TextBlock Grid.Row="1"
+                       Text="Prateleiras A–G · posições 1–8"
+                       FontSize="10"
+                       Margin="0,4,0,8"
+                       Foreground="{DynamicResource SwMidBrush}" />
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                <Grid RowDefinitions="Auto,*">
+                    <Grid ColumnDefinitions="30,*,*,*,*,*,*,*,*"
+                          Margin="0,0,0,4">
+                        <TextBlock Grid.Column="1" Text="1" HorizontalAlignment="Center" Classes="sw-label" />
+                        <TextBlock Grid.Column="2" Text="2" HorizontalAlignment="Center" Classes="sw-label" />
+                        <TextBlock Grid.Column="3" Text="3" HorizontalAlignment="Center" Classes="sw-label" />
+                        <TextBlock Grid.Column="4" Text="4" HorizontalAlignment="Center" Classes="sw-label" />
+                        <TextBlock Grid.Column="5" Text="5" HorizontalAlignment="Center" Classes="sw-label" />
+                        <TextBlock Grid.Column="6" Text="6" HorizontalAlignment="Center" Classes="sw-label" />
+                        <TextBlock Grid.Column="7" Text="7" HorizontalAlignment="Center" Classes="sw-label" />
+                        <TextBlock Grid.Column="8" Text="8" HorizontalAlignment="Center" Classes="sw-label" />
+                    </Grid>
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Prateleiras}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:LinhaPrateleiraViewModel">
+                                <Grid ColumnDefinitions="36,*" Height="48">
+                                    <TextBlock Text="{Binding Prateleira}"
+                                               FontSize="10" FontWeight="SemiBold"
+                                               VerticalAlignment="Center"
+                                               Foreground="{DynamicResource SwInkBrush}" />
+                                    <ItemsControl Grid.Column="1" ItemsSource="{Binding Celulas}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <UniformGrid Rows="1" Columns="8" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:EstoqueCelulaViewModel">
+                                                <Button Margin="2"
+                                                        Padding="0"
+                                                    Height="44"
+                                                    MinHeight="0"
+                                                        Background="Transparent"
+                                                        IsEnabled="{Binding Ocupada}"
+                                                        ToolTip.Tip="{Binding Dica}"
+                                                        Command="{Binding $parent[UserControl].DataContext.SelecionarCelulaCommand}"
+                                                        CommandParameter="{Binding .}">
+                                                    <Border BorderBrush="{DynamicResource SwLineBrush}"
+                                                            BorderThickness="1"
+                                                            Background="Transparent">
+                                                        <Grid>
+                                                            <Border Background="{DynamicResource SwMidBrush}"
+                                                                    IsVisible="{Binding Ocupada}" />
+                                                            <Border Background="{DynamicResource SwAccentBrush}"
+                                                                    IsVisible="{Binding EmDestaque}" />
+                                                            <TextBlock Text="{Binding TextoNormal}"
+                                                                       FontSize="10"
+                                                                       TextTrimming="CharacterEllipsis"
+                                                                       HorizontalAlignment="Center"
+                                                                       VerticalAlignment="Center"
+                                                                       Foreground="#FFFFFF" />
+                                                            <TextBlock Text="{Binding TextoDestaque}"
+                                                                       FontSize="10"
+                                                                       FontWeight="SemiBold"
+                                                                       TextTrimming="CharacterEllipsis"
+                                                                       HorizontalAlignment="Center"
+                                                                       VerticalAlignment="Center"
+                                                                       Foreground="{DynamicResource SwInkBrush}" />
+                                                        </Grid>
+                                                    </Border>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</UserControl>
