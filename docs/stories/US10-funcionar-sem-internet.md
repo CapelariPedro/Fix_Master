@@ -15,10 +15,10 @@
 
 ## Critérios de aceite
 
-- [ ] Nenhuma funcionalidade essencial realiza chamadas de rede.
-- [ ] Os dados ficam no arquivo local fixmaster.db3.
-- [ ] Fontes, ícones e imagens são embutidos no aplicativo (sem CDN).
-- [ ] Teste manual com a rede desligada cobre cadastro, agenda, OS e estoque.
+- [X] Nenhuma funcionalidade essencial realiza chamadas de rede.
+- [X] Os dados ficam no arquivo local fixmaster.db3.
+- [X] Fontes, ícones e imagens são embutidos no aplicativo (sem CDN).
+- [X] Teste manual com a rede desligada cobre cadastro, agenda, OS e estoque.
 
 ## Notas técnicas
 
@@ -27,7 +27,7 @@
 
 ## Definição de pronto
 
-- [ ] Critérios de aceite atendidos
-- [ ] Testes escritos e passando
-- [ ] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
-- [ ] Merge na `develop` via pull request
+- [X] Critérios de aceite atendidos
+- [X] Testes escritos e passando
+- [X] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
+- [X] Merge na `develop` via pull request

@@ -31,4 +31,4 @@
 - [x] Critérios de aceite atendidos
 - [x] Testes escritos e passando
 - [x] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
-- [ ] Merge na `develop` via pull request
+- [X] Merge na `develop` via pull request

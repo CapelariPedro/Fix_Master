@@ -15,10 +15,11 @@
 
 ## Critérios de aceite
 
-- [ ] Cards mostram: total de serviços marcados, pendentes, em andamento e concluídos do dia.
-- [ ] Uma lista (feed) mostra as atividades recentes, da mais recente para a mais antiga.
-- [ ] Os números vêm dos dados persistidos, respeitando os status definidos.
-- [ ] O dashboard reflete a conclusão de uma OS ao ser reaberto/atualizado.
+- [X] Cards mostram: total de serviços marcados, pendentes, em andamento e concluídos do dia.
+- [X] Agendamentos do dia aparecem em cards por horário crescente, com uma seção para os pendentes ou em andamento sem OS vinculada.
+- [X] Uma lista (feed) mostra as atividades recentes, da mais recente para a mais antiga.
+- [X] Os números vêm dos dados persistidos, respeitando os status definidos.
+- [X] O dashboard reflete a conclusão de uma OS ao ser reaberto/atualizado.
 
 ## Notas técnicas
 
@@ -27,7 +28,7 @@
 
 ## Definição de pronto
 
-- [ ] Critérios de aceite atendidos
-- [ ] Testes escritos e passando
-- [ ] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
-- [ ] Merge na `develop` via pull request
+- [X] Critérios de aceite atendidos
+- [X] Testes escritos e passando
+- [X] Interface segue o design system ([03-DESIGN-STARFIELD](../03-DESIGN-STARFIELD.md))
+- [X] Merge na `develop` via pull request

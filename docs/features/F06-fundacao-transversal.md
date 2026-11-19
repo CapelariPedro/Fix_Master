@@ -39,18 +39,17 @@ Preparar a base técnica sobre a qual as demais features são construídas.
 
 ## Tarefas técnicas
 
-- [ ] Instalar pacotes NuGet (ver `00-COMO-INICIAR.md`)
-- [ ] Criar `AppDbContext` e a migração `Inicial`
-- [ ] Configurar DI e `IDbContextFactory`
-- [ ] Importar `Themes/Colors.axaml` e `StarfieldStyles.axaml` no `App.axaml`
-- [ ] Criar `ShellView` com menu lateral e navegação
-- [ ] Criar projeto `FixMaster.Tests` (xUnit)
-- [ ] Atualizar `README.md` com requisitos e instruções de execução
-- [ ] Configurar GitHub: board, issues a partir destes arquivos, acesso do tutor
+- [X] Instalar pacotes NuGet (ver `00-COMO-INICIAR.md`)
+- [X] Criar `AppDbContext` e a migração `Inicial`
+- [X] Configurar DI e `IDbContextFactory`
+- [X] Importar `Themes/Colors.axaml` e `StarfieldStyles.axaml` no `App.axaml`
+- [X] Criar `ShellView` com menu lateral e navegação
+- [X] Criar projeto `FixMaster.Tests` (xUnit)
+- [X] Atualizar `README.md` com requisitos e instruções de execução
+- [X] Configurar GitHub: board, issues a partir destes arquivos, acesso do tutor
 
 ## Definição de pronto
 
-- [ ] Todas as histórias da feature concluídas
-- [ ] Regras de negócio cobertas por testes unitários
-- [ ] Funciona offline
-- [ ] Atividade relevante registrada no feed (quando aplicável)
+- [X] Todas as histórias da feature concluídas
+- [X] Regras de negócio cobertas por testes unitários
+- [X] Funciona offline

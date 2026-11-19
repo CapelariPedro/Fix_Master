@@ -33,4 +33,4 @@
 - [x] Critérios de aceite atendidos
 - [x] Testes escritos e passando
 - [x] Interface segue o aspecto Starfield atual
-- [ ] Merge na `develop` via pull request
+- [X] Merge na `develop` via pull request

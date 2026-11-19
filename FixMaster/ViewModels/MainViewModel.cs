@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Input;
 using FixMaster.Infrastructure;
@@ -13,6 +14,7 @@ public sealed partial class MainViewModel : ViewModelBase
     private readonly IEstoqueService _estoqueService;
     private readonly IAgendaService _agendaService;
     private readonly IOrdemServicoService _ordemServicoService;
+    private readonly IDashboardService _dashboardService;
     private object _currentScreen;
     private bool _isAdministrador;
     private bool _isPainelAutenticado;
@@ -26,13 +28,15 @@ public sealed partial class MainViewModel : ViewModelBase
         IClienteService clienteService,
         IEstoqueService estoqueService,
         IAgendaService agendaService,
-        IOrdemServicoService ordemServicoService)
+        IOrdemServicoService ordemServicoService,
+        IDashboardService dashboardService)
     {
         _auth = auth;
         _clienteService = clienteService;
         _estoqueService = estoqueService;
         _agendaService = agendaService;
         _ordemServicoService = ordemServicoService;
+        _dashboardService = dashboardService;
         _currentScreen = _auth.ExisteUsuario()
             ? CriarTelaLogin()
             : new PrimeiroAcessoViewModel(
@@ -42,8 +46,40 @@ public sealed partial class MainViewModel : ViewModelBase
     public object CurrentScreen
     {
         get => _currentScreen;
-        private set => SetProperty(ref _currentScreen, value);
+        private set
+        {
+            var anterior = _currentScreen;
+            if (!SetProperty(ref _currentScreen, value))
+                return;
+
+            if (anterior is ShellViewModel shellAnterior)
+                shellAnterior.PropertyChanged -= OnShellPropertyChanged;
+
+            if (value is ShellViewModel shellNovo)
+                shellNovo.PropertyChanged += OnShellPropertyChanged;
+
+            NotificarAbas();
+        }
     }
+
+    // Abas ativas (usadas para destacar o botão da sidebar)
+    public bool IsAbaInicio =>
+        CurrentScreen is ShellViewModel s && s.IsDashboardView;
+
+    public bool IsAbaClientes =>
+        CurrentScreen is ShellViewModel s && s.IsClientesPanelAberto;
+
+    public bool IsAbaEstoque =>
+        CurrentScreen is ShellViewModel s && s.IsEstoqueView;
+
+    public bool IsAbaAgenda =>
+        CurrentScreen is ShellViewModel s && s.IsAgendaView;
+
+    public bool IsAbaOrdensServico =>
+        CurrentScreen is ShellViewModel s && s.IsOrdensServicoView;
+
+    public bool IsAbaUsuarios =>
+        CurrentScreen is ShellViewModel s && s.IsUsuariosView;
 
     public bool IsAdministrador
     {
@@ -79,6 +115,19 @@ public sealed partial class MainViewModel : ViewModelBase
     {
         get => _cadastroUsuario;
         private set => SetProperty(ref _cadastroUsuario, value);
+    }
+
+    private void OnShellPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
+        NotificarAbas();
+
+    private void NotificarAbas()
+    {
+        OnPropertyChanged(nameof(IsAbaInicio));
+        OnPropertyChanged(nameof(IsAbaClientes));
+        OnPropertyChanged(nameof(IsAbaEstoque));
+        OnPropertyChanged(nameof(IsAbaAgenda));
+        OnPropertyChanged(nameof(IsAbaOrdensServico));
+        OnPropertyChanged(nameof(IsAbaUsuarios));
     }
 
     [RelayCommand]
@@ -139,6 +188,7 @@ public sealed partial class MainViewModel : ViewModelBase
             _estoqueService,
             _agendaService,
             _ordemServicoService,
+            _dashboardService,
             usuario);
         await shell.InicializarAsync();
         CurrentScreen = shell;
