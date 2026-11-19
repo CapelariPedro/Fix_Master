@@ -28,4 +28,15 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.14" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.14" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>fixmaster</PackageId>
+    <Version>1.0.0</Version>
+    <Description>Sistema de gestão FixMaster</Description>
+    <PackAsTool>false</PackAsTool>
+    <CreateDesktopEntry>true</CreateDesktopEntry>
+    <DesktopEntryName>FixMaster</DesktopEntryName>
+    <DesktopEntryCategories>Utility;</DesktopEntryCategories>
+  </PropertyGroup>
+
 </Project>
