@@ -1,5 +1,16 @@
 # Fix_Master
 
+## Download dos Instaladores
+
+| Sistema Operacional | Arquivo / Download Direto |
+| :--- | :--- |
+| **Windows 10/11 (x64)** | [FixMaster-Setup-Win64.exe](./FixMaster-Setup-Win64.exe) |
+| **Linux Fedora / RHEL / openSUSE** | [fixmaster-1.0.0-1.x86_64.rpm](./fixmaster-1.0.0-1.x86_64.rpm) |
+| **Linux Ubuntu / Debian / Mint** | [fixmaster.1.0.0.linux-x64.deb](./fixmaster.1.0.0.linux-x64.deb) |
+| **Linux Universal (AppImage)** | [FixMaster-Linux-x86_64.AppImage](./FixMaster-Linux-x86_64.AppImage) |
+| **macOS (Apple Silicon M1/M2/M3/M4)** | [FixMaster-macOS-AppleSilicon.dmg](./FixMaster-macOS-AppleSilicon.dmg) |
+| **macOS (Intel)** | [FixMaster-macOS-Intel.dmg](./FixMaster-macOS-Intel.dmg) |
+
 ## Arquitetura
 
 ## Visão geral
