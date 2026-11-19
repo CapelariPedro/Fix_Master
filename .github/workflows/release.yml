@@ -1,0 +1,217 @@
+name: Build e Commit Instaladores na Raiz (.NET 10)
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux-deb-appimage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Instalar ferramentas Linux
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libfuse2 wget file
+          dotnet tool install --global dotnet-deb
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Gerar pacote .deb
+        run: |
+          mkdir -p releases/installers
+          dotnet deb -c Release -r linux-x64 --self-contained true -o releases/installers FixMaster/FixMaster.csproj
+
+      - name: Gerar .AppImage
+        run: |
+          dotnet publish FixMaster/FixMaster.csproj -c Release -r linux-x64 --self-contained true -o releases/linux-x64
+          chmod +x releases/linux-x64/FixMaster
+
+          mkdir -p AppDir/usr/bin
+          cp -r releases/linux-x64/* AppDir/usr/bin/
+
+          cat << 'EOF' > AppDir/FixMaster.desktop
+          [Desktop Entry]
+          Type=Application
+          Name=FixMaster
+          Exec=FixMaster
+          Icon=fixmaster
+          Categories=Utility;
+          EOF
+
+          cat << 'EOF' > AppDir/AppRun
+          #!/bin/sh
+          HERE="$(dirname "$(readlink -f "${0}")")"
+          exec "${HERE}/usr/bin/FixMaster" "$@"
+          EOF
+          chmod +x AppDir/AppRun
+
+          cat << 'EOF' > AppDir/fixmaster.svg
+          <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+            <rect width="256" height="256" rx="48" fill="#1e293b"/>
+            <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="#38bdf8" font-family="sans-serif" font-size="96" font-weight="bold">FM</text>
+          </svg>
+          EOF
+
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool
+          chmod +x appimagetool
+          ARCH=x86_64 ./appimagetool --appimage-extract-and-run AppDir releases/installers/FixMaster-Linux-x86_64.AppImage
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installers-linux-deb-appimage
+          path: releases/installers/*
+
+  build-linux-rpm:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar .NET 10 SDK e rpm-build
+        run: |
+          dnf install -y dotnet-sdk-10.0 rpm-build git
+          dotnet tool install --global dotnet-rpm
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Gerar pacote .rpm
+        run: |
+          mkdir -p releases/installers
+          dotnet rpm -c Release -r linux-x64 --self-contained true -o releases/installers FixMaster/FixMaster.csproj
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installer-linux-rpm
+          path: releases/installers/*.rpm
+
+  build-windows-exe:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publicar Windows x64
+        run: |
+          dotnet publish FixMaster/FixMaster.csproj -c Release -r win-x64 --self-contained true -o releases/win-x64
+
+      - name: Gerar instalador .exe
+        run: |
+          choco install innosetup -y
+          mkdir releases\installers
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer_win.iss
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installer-windows-exe
+          path: releases/installers/*.exe
+
+  build-macos-dmg:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        include:
+          - rid: osx-arm64
+            arch_name: AppleSilicon
+          - rid: osx-x64
+            arch_name: Intel
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Publicar binário macOS (${{ matrix.rid }})
+        run: |
+          dotnet publish FixMaster/FixMaster.csproj -c Release -r ${{ matrix.rid }} --self-contained true -o releases/${{ matrix.rid }}
+
+      - name: Empacotar em .app e gerar .dmg
+        run: |
+          mkdir -p "releases/dmg_stage/FixMaster.app/Contents/MacOS"
+          mkdir -p "releases/dmg_stage/FixMaster.app/Contents/Resources"
+          mkdir -p "releases/installers"
+
+          cp -R releases/${{ matrix.rid }}/* "releases/dmg_stage/FixMaster.app/Contents/MacOS/"
+          chmod +x "releases/dmg_stage/FixMaster.app/Contents/MacOS/FixMaster"
+
+          cat << 'EOF' > "releases/dmg_stage/FixMaster.app/Contents/Info.plist"
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleName</key>
+            <string>FixMaster</string>
+            <key>CFBundleDisplayName</key>
+            <string>FixMaster</string>
+            <key>CFBundleIdentifier</key>
+            <string>com.capelaripedro.fixmaster</string>
+            <key>CFBundleVersion</key>
+            <string>1.0.0</string>
+            <key>CFBundlePackageType</key>
+            <string>APPL</string>
+            <key>CFBundleExecutable</key>
+            <string>FixMaster</string>
+            <key>NSHighResolutionCapable</key>
+            <true/>
+          </dict>
+          </plist>
+          EOF
+
+          ln -s /Applications "releases/dmg_stage/Applications"
+          hdiutil create -volname "FixMaster" -srcfolder "releases/dmg_stage" -ov -format UDZO "releases/installers/FixMaster-macOS-${{ matrix.arch_name }}.dmg"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: installer-macos-${{ matrix.arch_name }}
+          path: releases/installers/*.dmg
+
+  commit-to-root:
+    needs: [build-linux-deb-appimage, build-linux-rpm, build-windows-exe, build-macos-dmg]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout da branch main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Baixar todos os instaladores
+        uses: actions/download-artifact@v4
+        with:
+          path: temp_dist
+
+      - name: Substituir instaladores na raiz do repositório
+        run: |
+          rm -f *.exe *.rpm *.deb *.AppImage *.dmg
+          find temp_dist -type f \( -name "*.exe" -o -name "*.rpm" -o -name "*.deb" -o -name "*.AppImage" -o -name "*.dmg" \) -exec cp {} . \;
+          rm -rf temp_dist
+
+      - name: Commit e Push na raiz da main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add *.exe *.rpm *.deb *.AppImage *.dmg
+          if ! git diff --staged --quiet; then
+            git commit -m "build: atualiza instaladores na raiz [skip ci]"
+            git push origin main
+          fi
