@@ -37,3 +37,5 @@ $RECYCLE.BIN/
 # Releases geradas
 /releases/linux-x64/
 /releases/win-x64/
+/releases/macos-x64/
+/releases/macos-arm64/
