@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 permissions:
   contents: write
 
@@ -13,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Configurar .NET 10 SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
 
@@ -30,7 +33,7 @@ jobs:
       - name: Gerar pacote .deb
         run: |
           mkdir -p releases/installers
-          dotnet deb -c Release -r linux-x64 --self-contained true -o releases/installers FixMaster/FixMaster.csproj
+          dotnet deb -c Release -r linux-x64 -o releases/installers FixMaster/FixMaster.csproj
 
       - name: Gerar .AppImage
         run: |
@@ -67,7 +70,7 @@ jobs:
           chmod +x appimagetool
           ARCH=x86_64 ./appimagetool --appimage-extract-and-run AppDir releases/installers/FixMaster-Linux-x86_64.AppImage
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: installers-linux-deb-appimage
           path: releases/installers/*
@@ -78,7 +81,7 @@ jobs:
       image: fedora:latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Instalar .NET 10 SDK e rpm-build
         run: |
@@ -89,9 +92,9 @@ jobs:
       - name: Gerar pacote .rpm
         run: |
           mkdir -p releases/installers
-          dotnet rpm -c Release -r linux-x64 --self-contained true -o releases/installers FixMaster/FixMaster.csproj
+          dotnet rpm -c Release -r linux-x64 -o releases/installers FixMaster/FixMaster.csproj
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: installer-linux-rpm
           path: releases/installers/*.rpm
@@ -100,10 +103,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Configurar .NET 10 SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
 
@@ -117,7 +120,7 @@ jobs:
           mkdir releases\installers
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer_win.iss
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: installer-windows-exe
           path: releases/installers/*.exe
@@ -133,10 +136,10 @@ jobs:
             arch_name: Intel
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Configurar .NET 10 SDK
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
 
@@ -179,7 +182,7 @@ jobs:
           ln -s /Applications "releases/dmg_stage/Applications"
           hdiutil create -volname "FixMaster" -srcfolder "releases/dmg_stage" -ov -format UDZO "releases/installers/FixMaster-macOS-${{ matrix.arch_name }}.dmg"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: installer-macos-${{ matrix.arch_name }}
           path: releases/installers/*.dmg
@@ -190,13 +193,13 @@ jobs:
 
     steps:
       - name: Checkout da branch main
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: main
           fetch-depth: 0
 
       - name: Baixar todos os instaladores
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: temp_dist
 
