@@ -33,3 +33,7 @@ $RECYCLE.BIN/
 
 # macOS
 .DS_Store
+
+# Releases geradas
+/releases/linux-x64/
+/releases/win-x64/
